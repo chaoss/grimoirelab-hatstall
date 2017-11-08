@@ -33,7 +33,7 @@ from sortinghat.db.model import MIN_PERIOD_DATE, MAX_PERIOD_DATE,\
     UniqueIdentity, Identity, Profile, Organization, Domain,\
     Country, Enrollment, MatchingBlacklist
 
-from flask import Flask, request, render_template
+from flask import Flask, request, redirect, url_for, render_template
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -123,6 +123,20 @@ def profile(profile_uuid):
         profile_info = session.query(UniqueIdentity).filter(UniqueIdentity.uuid == profile_uuid).first()
 
         return render_template('profile.html', profile=profile_info.to_dict())
+
+@app.route('/unmerge/<identity_id>')
+def unmerge(identity_id):
+    uid_target = '3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'
+    sortinghat.api.move_identity(db, identity_id, identity_id)
+    #sortinghat.api.edit_profile(db, uid_target)
+    with db.connect() as sesion:
+        edit_identity = sesion.query(Identity).filter(Identity.uuid == identity_id).first()
+        uid_profile_uuid = edit_identity.id
+        uid_profile_name = edit_identity.name
+        uid_profile_email = edit_identity.email
+        sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
+        logging.info("Unmerged {} and created its unique indentity".format(identity_id))
+    return redirect(url_for('profiles'))
 
 if __name__ == '__main__':
     import sys
