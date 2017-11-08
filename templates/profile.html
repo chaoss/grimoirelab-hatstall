@@ -8,21 +8,44 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#identities').DataTable();
+
+            $('#editProfileData').click(function(){
+                $('#profileData input').removeAttr('readonly').removeClass('form-control-plaintext').addClass('form-control');
+                $('#submitProfileData').removeAttr('hidden');
+                $(this).attr('hidden', '');
+            });
         });
     </script>
 {% endblock %}
 
 {% block body %}
-<h1>Profile info</h1>
-<p><b>uuid</b>: {{profile.profile.uuid}}</p>
-<p><b>Name</b>: {{profile.profile.name}}</p>
-<p><b>e-mail</b>: {{profile.profile.email}}</p>
-<p><b>Bot</b>: {{profile.profile.is_bot}}</p>
-<p><b>Country</b>: {{profile.profile.country}}</p>
+<h1>Profile info / <small>{{profile.profile.uuid}}</small></h1>
+<div class="row">
+    <div class="col-lg-6">
+<form id="profileData" action="" method="POST">
+    <div class="form-group row">
+        <label for="profileName" class="col-sm-2 col-form-label"><b>Name</b></label>
+        <input name="name" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileName" value="{{profile.profile.name}}">
+    </div>
+    <div class="form-group row">
+        <label for="profileEmail" class="col-sm-2 col-form-label"><b>e-mail</b></label>
+        <input name="email" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileEmail" value="{{profile.profile.email}}">
+    </div>
+    <div class="form-group row">
+        <label for="profileBot" class="col-sm-2 col-form-label"><b>Bot?</b></label>
+        <input name="bot" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileBot" value="{{profile.profile.is_bot}}">
+    </div>
+    <div class="form-group row">
+        <label for="profileCountry" class="col-sm-2 col-form-label"><b>Country</b></label>
+        <input name="country" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileEmail" value="{{profile.profile.country}}">
+    </div>
+    <span id="editProfileData" class="btn btn-primary">Edit</span>
+    <button type="submit" class="btn btn-success" id="submitProfileData" hidden>Submit</button>
+</form>
 
 <h2>Identitites</h2>
-<table id="identities">
-    <thead>
+<table class="table table-striped" id="identities">
+    <thead class="thead-dark">
         <tr>
             <th>Name</th>
             <th>email</th>
@@ -43,4 +66,6 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
+</div>
 {% endblock %}
