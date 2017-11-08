@@ -91,10 +91,17 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    """
+    Render index page
+    """
     return render_template('index.html')
 
 @app.route('/profiles', methods =['GET', 'POST'])
 def profiles():
+    """
+    Render profiles page
+    Includes profiles merging functionallity
+    """
     if request.method == 'POST':
         merge(request.form.getlist('uuid'))
         return render_profiles()
@@ -103,6 +110,10 @@ def profiles():
 
 @app.route('/profiles/<profile_uuid>')
 def profile(profile_uuid):
+    """
+    Render profile page
+    Includes profiles indentities unmerging
+    """
     with db.connect() as session:
         profile_info = session.query(UniqueIdentity).filter(UniqueIdentity.uuid == profile_uuid).first()
 
@@ -110,16 +121,25 @@ def profile(profile_uuid):
 
 @app.route('/unmerge/<identity_id>')
 def unmerge(identity_id):
+    """
+    Unmerge a given identity from a unique identity, creating a new unique identity
+    """
     sortinghat.api.move_identity(db, identity_id, identity_id)
     
     with db.connect() as sesion:
         edit_identity = sesion.query(Identity).filter(Identity.uuid == identity_id).first()
-        #uid_profile_uuid = edit_identity.id
         uid_profile_name = edit_identity.name
         uid_profile_email = edit_identity.email
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
         logging.info("Unmerged {} and created its unique indentity".format(identity_id))
     return redirect(url_for('profiles'))
+
+@app.route('/organizations')
+def organizations():
+    """
+    Render organizations page
+    """
+    return render_template('organizations.html')
 
 if __name__ == '__main__':
     import sys

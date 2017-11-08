@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% set active_page = "organizations" %}
+
+{% block title %}Profiles{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#myTable').DataTable();
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+Organizations: <em>to be implemented</em>
+{% endblock %}
