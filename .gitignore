@@ -1,8 +1,9 @@
+.gitignore
 .ipynb_checkpoints/
 bin/
 include/
 lib/
-lib64/
+lib64
 share/
 pyvenv.cfg
 my-shdb.cfg
