@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block body %}
+<h1>CommunityDB Web Manager</h1>
+<ul>
+  <li><a href="/profiles">Profiles</a></li>
+  <li>Organizations</li>
+</ul>
+{% endblock %}

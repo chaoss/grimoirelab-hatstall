@@ -1,0 +1,4 @@
+Flask==0.12.2
+grimoire-elk==0.30.9
+grimoirelab-toolkit==0.1.1
+sortinghat==0.4.3

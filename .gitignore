@@ -1,0 +1,9 @@
+.ipynb_checkpoints/
+bin/
+include/
+lib/
+lib64/
+share/
+pyvenv.cfg
+my-shdb.cfg
+Learning_sortinghat.ipynb
