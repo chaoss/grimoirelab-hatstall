@@ -26,8 +26,8 @@
             <th>Name</th>
             <th>email</th>
             <th>Username</th>
-            <th>source</th>
-            <th>id</th>
+            <th>Source</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@
                 <td>{{identity.email}}</td>
                 <td>{{identity.username}}</td>
                 <td>{{identity.source}}</td>
-                <td>{{identity.id}}</td>
+                <td><a href="/unmerge/{{identity.id}}">unmerge</a></td>
             </tr>
         {% endfor %}
     </tbody>

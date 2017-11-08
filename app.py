@@ -70,6 +70,39 @@ def sortinghat_db_conn(filename):
 
     return db
 
+def merge(uuids):
+    """
+    Merge a set of profiles given the list of uuids
+    """
+    if len(uuids) > 1:
+        for uuid in uuids[:-1]:
+            sortinghat.api.merge_unique_identities(db, uuid, uuids[-1])
+            logging.info("{} merged into {}".format(uuid, uuids[-1]))
+    else:
+        logging.info("You need at least 2 profiles to merge them")
+
+def unmerge(uuid):
+    uid_target = '3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'
+    sortinghat.api.move_identity(db, uid_target, uid_target)
+    #sortinghat.api.edit_profile(db, uid_target)
+    with db.connect() as sesion:
+        edit_identity = sesion.query(Identity).filter(Identity.uuid == uid_target).first()
+        uid_profile_uuid = edit_identity.id
+        uid_profile_name = edit_identity.name
+        uid_profile_email = edit_identity.email
+        sortinghat.api.edit_profile(db, uid_target, name=uid_profile_name, email=uid_profile_email)
+    print(edit_identity.to_dict())
+
+def render_profiles():
+    """
+    Render profiles page
+    """
+    unique_identities = []
+    with db.connect() as session:
+        for u_identity in session.query(UniqueIdentity):
+            unique_identities.append(u_identity.to_dict())
+    return render_template('profiles.html', uids=unique_identities)
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -79,18 +112,10 @@ def index():
 @app.route('/profiles', methods =['GET', 'POST'])
 def profiles():
     if request.method == 'POST':
-        print(request.form.getlist('uuid'))
-        unique_identities = []
-        with db.connect() as session:
-            for u_identity in session.query(UniqueIdentity):
-                unique_identities.append(u_identity.to_dict())
-        return render_template('profiles.html', uids=unique_identities)
+        merge(request.form.getlist('uuid'))
+        return render_profiles()
     else:
-        unique_identities = []
-        with db.connect() as session:
-            for u_identity in session.query(UniqueIdentity):
-                unique_identities.append(u_identity.to_dict())
-        return render_template('profiles.html', uids=unique_identities)
+        return render_profiles()
 
 @app.route('/profiles/<profile_uuid>')
 def profile(profile_uuid):
