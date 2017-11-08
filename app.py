@@ -77,18 +77,6 @@ def merge(uuids):
     else:
         logging.info("You need at least 2 profiles to merge them")
 
-def unmerge(uuid):
-    uid_target = '3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'
-    sortinghat.api.move_identity(db, uid_target, uid_target)
-    #sortinghat.api.edit_profile(db, uid_target)
-    with db.connect() as sesion:
-        edit_identity = sesion.query(Identity).filter(Identity.uuid == uid_target).first()
-        uid_profile_uuid = edit_identity.id
-        uid_profile_name = edit_identity.name
-        uid_profile_email = edit_identity.email
-        sortinghat.api.edit_profile(db, uid_target, name=uid_profile_name, email=uid_profile_email)
-    print(edit_identity.to_dict())
-
 def render_profiles():
     """
     Render profiles page
@@ -122,12 +110,11 @@ def profile(profile_uuid):
 
 @app.route('/unmerge/<identity_id>')
 def unmerge(identity_id):
-    uid_target = '3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'
     sortinghat.api.move_identity(db, identity_id, identity_id)
-    #sortinghat.api.edit_profile(db, uid_target)
+    
     with db.connect() as sesion:
         edit_identity = sesion.query(Identity).filter(Identity.uuid == identity_id).first()
-        uid_profile_uuid = edit_identity.id
+        #uid_profile_uuid = edit_identity.id
         uid_profile_name = edit_identity.name
         uid_profile_email = edit_identity.email
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
