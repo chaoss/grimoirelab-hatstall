@@ -13,39 +13,53 @@
 {% endblock %}
 
 {% block body %}
-        <h1>Profiles</h1>
-        <form action="/profiles" method="POST">
+<h1>Profiles</h1>
+<form action="/profiles" method="POST">
 
-        <table class="table table-striped" id="myTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>email</th>
-                    <th>Bot?</th>
-                    <th>Country</th>
-                    <th><abbr title="identities">ids.</abbr></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="7"><input type="submit" value="Merge" class="btn btn-success"></td>
-                </tr>
-            </tfoot>
-            <tbody>
-                {% for uid in uids %}
-                <tr>
-                    <td><input type="checkbox" name="uuid" value="{{uid.profile.uuid}}"></td>
-                    <td>{{uid.profile.name}}</td>
-                    <td>{{uid.profile.email}}</td>
-                    <td>{{uid.profile.is_bot}}</td>
-                    <td>{{uid.profile.country}}</td>
-                    <td>{{uid.identities|length}}</td>
-                    <td><a href="/profiles/{{uid.profile.uuid}}">edit</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </form>
+    <table class="table table-striped" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>email</th>
+                <th>Enrollments</th>
+                <th>Bot?</th>
+                <th>Country</th>
+                <th>
+                    <abbr title="identities">ids.</abbr>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    <input type="submit" value="Merge" class="btn btn-success">
+                </td>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for uid in uids %}
+            <tr>
+                <td>
+                    <input type="checkbox" name="uuid" value="{{uid.profile.uuid}}">
+                </td>
+                <td>{{uid.profile.name}}</td>
+                <td>{{uid.profile.email}}</td>
+                <td>
+                    {% for enrollment in uid.enrollments %}
+                        {{enrollment}}
+                    {% endfor %}
+                </td>
+                <td>{{uid.profile.is_bot}}</td>
+                <td>{{uid.profile.country}}</td>
+                <td>{{uid.identities|length}}</td>
+                <td>
+                    <a href="/profiles/{{uid.profile.uuid}}">edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
 {% endblock %}

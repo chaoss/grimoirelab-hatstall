@@ -8,6 +8,7 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#profileIdsTable').DataTable();
+            $('#profileEnrollments').DataTable();
             $('#orgsTable').DataTable();
             $('#identitiesTable').DataTable();
 
@@ -23,28 +24,78 @@
 {% block body %}
 <h1>Profile info / <small>{{profile.profile.uuid}}</small></h1>
 <div class="row">
+    <div class="col-md-7">
+        <div class="row">
+            <div class="col-md-5">
+                <form id="profileData" action="" method="POST">
+                    <div class="form-group row">
+                        <label for="profileName" class="col-sm-2 col-form-label"><b>Name</b></label>
+                        <input name="name" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileName" value="{{profile.profile.name}}">
+                    </div>
+                    <div class="form-group row">
+                        <label for="profileEmail" class="col-sm-2 col-form-label"><b>e-mail</b></label>
+                        <input name="email" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileEmail" value="{{profile.profile.email}}">
+                    </div>
+                    <div class="form-group row">
+                        <label for="profileBot" class="col-sm-2 col-form-label"><b>Bot?</b></label>
+                        <input name="bot" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileBot" value="{{profile.profile.is_bot}}">
+                    </div>
+                    <div class="form-group row">
+                        <label for="profileCountry" class="col-sm-2 col-form-label"><b>Country</b></label>
+                        <input name="country" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileEmail" value="{{profile.profile.country}}">
+                    </div>
+                    <span id="editProfileData" class="btn btn-primary">Edit</span>
+                    <button type="submit" class="btn btn-success" id="submitProfileData" hidden>Submit</button>
+                </form>
+            </div>
+            <div class="col-md-7">
+                <h2>Enrollments</h2>
+                <table class="table table-striped" id="profileEnrollments">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enrollment in enrollments %}
+                        <tr>
+                            <td>{{enrollment.organization.name}}</td>
+                            <td>{{enrollment.start}}</td>
+                            <td>{{enrollment.end}}</td>
+                            <td><a href="/profiles/{{profile.profile.uuid}}/unenroll_from/{{enrollment.organization.name}}">un-enroll</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
     <div class="col-md-5">
-        <form id="profileData" action="" method="POST">
-            <div class="form-group row">
-                <label for="profileName" class="col-sm-2 col-form-label"><b>Name</b></label>
-                <input name="name" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileName" value="{{profile.profile.name}}">
-            </div>
-            <div class="form-group row">
-                <label for="profileEmail" class="col-sm-2 col-form-label"><b>e-mail</b></label>
-                <input name="email" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileEmail" value="{{profile.profile.email}}">
-            </div>
-            <div class="form-group row">
-                <label for="profileBot" class="col-sm-2 col-form-label"><b>Bot?</b></label>
-                <input name="bot" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileBot" value="{{profile.profile.is_bot}}">
-            </div>
-            <div class="form-group row">
-                <label for="profileCountry" class="col-sm-2 col-form-label"><b>Country</b></label>
-                <input name="country" type="text" readonly class="col-sm-10 form-control-plaintext" id="profileEmail" value="{{profile.profile.country}}">
-            </div>
-            <span id="editProfileData" class="btn btn-primary">Edit</span>
-            <button type="submit" class="btn btn-success" id="submitProfileData" hidden>Submit</button>
-        </form>
-
+        <h2>Organizations</h2>
+        <table class="table table-striped" id="orgsTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for org in orgs %}
+                <tr>
+                    <td>{{org.name}}</td>
+                    <td><a href="/profiles/{{profile.profile.uuid}}/enroll_in/{{org.name}}">enroll</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
         <h2>Profile Identitites</h2>
         <table class="table table-striped" id="profileIdsTable">
             <thead class="thead-dark">
@@ -58,35 +109,18 @@
             </thead>
             <tbody>
                 {% for identity in profile.identities %}
-                    <tr>
-                        <td>{{identity.name}}</td>
-                        <td>{{identity.email}}</td>
-                        <td>{{identity.username}}</td>
-                        <td>{{identity.source}}</td>
-                        <td><a href="/unmerge/{{identity.id}}">unmerge</a></td>
-                    </tr>
+                <tr>
+                    <td>{{identity.name}}</td>
+                    <td>{{identity.email}}</td>
+                    <td>{{identity.username}}</td>
+                    <td>{{identity.source}}</td>
+                    <td><a href="/unmerge/{{identity.id}}">unmerge</a></td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="col-md-7">
-        <h2>Organizations</h2>
-        <table class="table table-striped" id="orgsTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for org in orgs %}
-                <tr>
-                    <td>{{org.name}}</td>
-                    <td><a href="enroll_in/{{org.name}}">enroll</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
         <h2>Identities</h2>
         <form action="./{{profile.profile.uuid}}/merge" method="POST">
             <table class="table table-striped" id="identitiesTable">
@@ -102,7 +136,7 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <td colspan="7"><input type="submit" value="Merge" class="btn btn-success"></td>
+                        <td colspan="6"><input type="submit" value="Merge" class="btn btn-success"></td>
                     </tr>
                 </tfoot>
                 <tbody>
