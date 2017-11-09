@@ -78,10 +78,20 @@ def render_profiles():
     return render_template('profiles.html', uids=unique_identities)
 
 def render_profile(profile_uuid):
+    """
+    Render unique identity profile page
+    It shows also sections to add enrollments and merge remaining
+    identities
+    """
+    orgs = sortinghat.api.registry(db)
+    remaining_identities = []
     with db.connect() as session:
         profile_info = session.query(UniqueIdentity).filter(UniqueIdentity.uuid == profile_uuid).first()
+        profile_identities = [x.id for x in profile_info.identities]
+        for identity in session.query(Identity).filter(Identity.id.notin_(profile_identities)):
+            remaining_identities.append(identity)
         session.expunge_all()
-    return render_template('profile.html', profile=profile_info.to_dict())
+    return render_template('profile.html', profile=profile_info.to_dict(), orgs=orgs, identities=remaining_identities)
 
 def merge(uuids):
     """
@@ -107,7 +117,7 @@ def index():
     """
     return render_template('index.html')
 
-@app.route('/profiles', methods =['GET', 'POST'])
+@app.route('/profiles', strict_slashes=False, methods =['GET', 'POST'])
 def profiles():
     """
     Render profiles page
@@ -152,7 +162,9 @@ def organizations():
     """
     Render organizations page
     """
-    return render_template('organizations.html')
+    orgs = sortinghat.api.registry(db)
+    domains = sortinghat.api.domains(db)
+    return render_template('organizations.html', orgs=orgs, domains=domains)
 
 if __name__ == '__main__':
     import sys
