@@ -74,13 +74,14 @@ def render_profiles():
     with db.connect() as session:
         for u_identity in session.query(UniqueIdentity):
             unique_identities.append(u_identity.to_dict())
+    session.expunge_all()
     return render_template('profiles.html', uids=unique_identities)
 
 def render_profile(profile_uuid):
     with db.connect() as session:
         profile_info = session.query(UniqueIdentity).filter(UniqueIdentity.uuid == profile_uuid).first()
-
-        return render_template('profile.html', profile=profile_info.to_dict())
+        session.expunge_all()
+    return render_template('profile.html', profile=profile_info.to_dict())
 
 def merge(uuids):
     """
@@ -94,7 +95,7 @@ def merge(uuids):
         logging.info("You need at least 2 profiles to merge them")
 
 def update_profile(uuid, profile_data):
-    sortinghat.api.edit_profile(db, uuid, name=profile_data['name'], email=profile_data['email'], is_bot=bool(profile_data['bot']), country=profile_data['country'])
+    sortinghat.api.edit_profile(db, uuid, name=profile_data['name'], email=profile_data['email'], is_bot=profile_data['bot'] == 'True', country=profile_data['country'])
     logging.info("{} update with: name: {}, email: {}, bot: {}, country: {}".format(uuid, profile_data['name'], profile_data['email'], profile_data['bot'], profile_data['country']))
 
 app = Flask(__name__)
@@ -143,6 +144,7 @@ def unmerge(identity_id):
         uid_profile_email = edit_identity.email
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
         logging.info("Unmerged {} and created its unique indentity".format(identity_id))
+    session.expunge_all()
     return redirect(url_for('profiles'))
 
 @app.route('/organizations')
