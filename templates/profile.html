@@ -88,28 +88,37 @@
             </tbody>
         </table>
         <h2>Identities</h2>
-        <table class="table table-striped" id="identitiesTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>email</th>
-                    <th>Username</th>
-                    <th>Source</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for identity in identities %}
-                <tr>
-                    <td>{{identity.name}}</td>
-                    <td>{{identity.email}}</td>
-                    <td>{{identity.username}}</td>
-                    <td>{{identity.source}}</td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <form action="./{{profile.profile.uuid}}/merge" method="POST">
+            <table class="table table-striped" id="identitiesTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>email</th>
+                        <th>Username</th>
+                        <th>Source</th>
+                        <th>uuids.</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="7"><input type="submit" value="Merge" class="btn btn-success"></td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for identity in identities %}
+                    <tr>
+                        <td><input type="checkbox" name="uuid" value="{{identity.uuid}}"></td>
+                        <td>{{identity.name}}</td>
+                        <td>{{identity.email}}</td>
+                        <td>{{identity.username}}</td>
+                        <td>{{identity.source}}</td>
+                        <td><a href="/profiles/{{identity.uuid}}">view</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
     </div>
 </div>
 {% endblock %}

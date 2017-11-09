@@ -141,6 +141,16 @@ def profile(profile_uuid):
     else:
         return render_profile(profile_uuid)
 
+@app.route('/profiles/<profile_uuid>/merge', methods = ['POST'])
+def merge_to_profile(profile_uuid):
+    """
+    Merge a list of unique profiles to the profile
+    """
+    uuids = request.form.getlist('uuid')
+    uuids.append(profile_uuid)
+    merge(uuids)
+    return redirect(url_for('profile', profile_uuid=profile_uuid))
+
 @app.route('/unmerge/<identity_id>')
 def unmerge(identity_id):
     """
@@ -148,8 +158,8 @@ def unmerge(identity_id):
     """
     sortinghat.api.move_identity(db, identity_id, identity_id)
     
-    with db.connect() as sesion:
-        edit_identity = sesion.query(Identity).filter(Identity.uuid == identity_id).first()
+    with db.connect() as session:
+        edit_identity = session.query(Identity).filter(Identity.uuid == identity_id).first()
         uid_profile_name = edit_identity.name
         uid_profile_email = edit_identity.email
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
