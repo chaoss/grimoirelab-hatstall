@@ -90,17 +90,21 @@ def render_profile(profile_uuid):
     identities
     """
     orgs = sortinghat.api.registry(db)
+    
     remaining_identities = []
     profile_enrollments = []
     with db.connect() as session:
         profile_info = session.query(UniqueIdentity).\
             filter(UniqueIdentity.uuid == profile_uuid).first()
         profile_identities = [x.id for x in profile_info.identities]
+        
         for identity in session.query(Identity).filter(Identity.id.notin_(profile_identities)):
             remaining_identities.append(identity)
+        
         for enrollment in profile_info.enrollments:
             profile_enrollments.append(enrollment)
         session.expunge_all()
+    
     return render_template('profile.html', profile=profile_info.to_dict(),\
          orgs=orgs, identities=remaining_identities, enrollments=profile_info.enrollments)
 
@@ -188,7 +192,7 @@ def unenroll_profile(profile_uuid, organization):
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/profiles/<profile_uuid>/unmerge/<identity_id>')
-def unmerge(identity_id):
+def unmerge(profile_uuid, identity_id):
     """
     Unmerge a given identity from a unique identity, creating a new unique identity
     """
@@ -202,13 +206,16 @@ def unmerge(identity_id):
     session.expunge_all()
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
-@app.route('/organizations')
+@app.route('/organizations', methods=['GET', 'POST'])
 def organizations():
     """
     Render organizations page
     """
     orgs = sortinghat.api.registry(db)
     domains = sortinghat.api.domains(db)
+    if request.method == 'POST':
+        sortinghat.api.add_organization(db, request.form['name'])
+    
     return render_template('organizations.html', orgs=orgs, domains=domains)
 
 if __name__ == '__main__':
