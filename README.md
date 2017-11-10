@@ -42,3 +42,7 @@ Feel free to fork it and submit merge requests. We are sure it can be improved i
 # License
 
 GPL v3
+
+## Logo
+
+Logo is based in a combination of [Bitergia](http://bitergia.com)'s owl logo and [Wizard's white hat](https://openclipart.org/detail/245968/wizards-white-hat) from [Thewizardplusplus](https://openclipart.org/user-detail/thewizardplusplus)
