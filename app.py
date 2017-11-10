@@ -187,7 +187,7 @@ def unenroll_profile(profile_uuid, organization):
     logging.info("Un-enrolled {} in {}".format(profile_uuid, organization))
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
-@app.route('/unmerge/<identity_id>')
+@app.route('/profiles/<profile_uuid>/unmerge/<identity_id>')
 def unmerge(identity_id):
     """
     Unmerge a given identity from a unique identity, creating a new unique identity
@@ -200,7 +200,7 @@ def unmerge(identity_id):
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
         logging.info("Unmerged {} and created its unique indentity".format(identity_id))
     session.expunge_all()
-    return redirect(url_for('profiles'))
+    return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/organizations')
 def organizations():

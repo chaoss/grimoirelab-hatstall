@@ -7,8 +7,8 @@
     {{ super() }}
     <script type="text/javascript">
         $(document).ready(function(){
-            $('#profileIdsTable').DataTable();
-            $('#profileEnrollments').DataTable();
+            //$('#profileIdsTable').DataTable();
+            //$('#profileEnrollments').DataTable();
             $('#orgsTable').DataTable();
             $('#identitiesTable').DataTable();
 
@@ -17,6 +17,22 @@
                 $('#submitProfileData').removeAttr('hidden');
                 $(this).attr('hidden', '');
             });
+
+            $('#addEnrollmentsBtn').click(function(){
+                $('#organizations').removeAttr('hidden');
+            });
+
+            $('#addIdentitiesBtn').click(function(){
+                $('#identities').removeAttr('hidden');
+            });
+
+            $('#closeOrganizations').click(function(){
+                $('#organizations').attr('hidden','');
+            });
+
+            $('#closeIdentities').click(function(){
+                $('#identities').attr('hidden','');
+            });
         });
     </script>
 {% endblock %}
@@ -24,7 +40,7 @@
 {% block body %}
 <h1>Profile info / <small>{{profile.profile.uuid}}</small></h1>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="row">
             <div class="col-lg-12">
                 <form id="profileData" action="" method="POST">
@@ -51,8 +67,9 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h2>Enrollments</h2>
-                <table class="table table-striped" id="profileEnrollments">
+                <h2 class="float-left">Enrollments</h2>
+                <button id="addEnrollmentsBtn" type="button" class="btn btn-primary btn-sm float-right">Add <span class="sr-only">enrollments</span></button>
+                <table class="table table-striped table-sm" id="profileEnrollments">
                     <thead class="thead-dark">
                         <tr>
                             <th>Name</th>
@@ -76,8 +93,9 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h2>Profile Identitites</h2>
-                <table class="table table-striped" id="profileIdsTable">
+                <h2 class="float-left">Profile Identitites</h2>
+                <button id="addIdentitiesBtn" type="button" class="btn btn-primary btn-sm float-right">Add <span class="sr-only">identities</span></button>
+                <table class="table table-striped table-sm" id="profileIdsTable">
                     <thead class="thead-dark">
                         <tr>
                             <th>Name</th>
@@ -94,7 +112,11 @@
                             <td>{{identity.email}}</td>
                             <td>{{identity.username}}</td>
                             <td>{{identity.source}}</td>
-                            <td><a href="/unmerge/{{identity.id}}">unmerge</a></td>
+                            <td>
+                                {% if profile.profile.uuid != identity.id %}
+                                <a href="/profiles/{{profile.profile.uuid}}/unmerge/{{identity.id}}">unmerge</a>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -102,10 +124,13 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="row">
+    <div class="col-md-7">
+        <div id="organizations" hidden class="row">
             <div class="col-lg-12">
-                <h2>Organizations</h2>
+                <h2 class="float-left">Organizations</h2>
+                <button id="closeOrganizations" type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 <table class="table table-striped" id="orgsTable">
                     <thead class="thead-dark">
                         <tr>
@@ -124,9 +149,12 @@
                 </table>
             </div>
         </div>
-        <div class="row">
+        <div id="identities" hidden class="row">
             <div class="col-lg-12">
-                <h2>Identities</h2>
+                <h2 class="float-left">Identities</h2>
+                <button id="closeIdentities" type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 <form action="./{{profile.profile.uuid}}/merge" method="POST">
                     <table class="table table-striped" id="identitiesTable">
                         <thead class="thead-dark">
