@@ -24,9 +24,9 @@
 {% block body %}
 <h1>Profile info / <small>{{profile.profile.uuid}}</small></h1>
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-6">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-lg-12">
                 <form id="profileData" action="" method="POST">
                     <div class="form-group row">
                         <label for="profileName" class="col-sm-2 col-form-label"><b>Name</b></label>
@@ -48,7 +48,9 @@
                     <button type="submit" class="btn btn-success" id="submitProfileData" hidden>Submit</button>
                 </form>
             </div>
-            <div class="col-md-7">
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
                 <h2>Enrollments</h2>
                 <table class="table table-striped" id="profileEnrollments">
                     <thead class="thead-dark">
@@ -72,87 +74,92 @@
                 </table>
             </div>
         </div>
-        
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Profile Identitites</h2>
+                <table class="table table-striped" id="profileIdsTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>email</th>
+                            <th>Username</th>
+                            <th>Source</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for identity in profile.identities %}
+                        <tr>
+                            <td>{{identity.name}}</td>
+                            <td>{{identity.email}}</td>
+                            <td>{{identity.username}}</td>
+                            <td>{{identity.source}}</td>
+                            <td><a href="/unmerge/{{identity.id}}">unmerge</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="col-md-5">
-        <h2>Organizations</h2>
-        <table class="table table-striped" id="orgsTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for org in orgs %}
-                <tr>
-                    <td>{{org.name}}</td>
-                    <td><a href="/profiles/{{profile.profile.uuid}}/enroll_in/{{org.name}}">enroll</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-5">
-        <h2>Profile Identitites</h2>
-        <table class="table table-striped" id="profileIdsTable">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>email</th>
-                    <th>Username</th>
-                    <th>Source</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for identity in profile.identities %}
-                <tr>
-                    <td>{{identity.name}}</td>
-                    <td>{{identity.email}}</td>
-                    <td>{{identity.username}}</td>
-                    <td>{{identity.source}}</td>
-                    <td><a href="/unmerge/{{identity.id}}">unmerge</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-7">
-        <h2>Identities</h2>
-        <form action="./{{profile.profile.uuid}}/merge" method="POST">
-            <table class="table table-striped" id="identitiesTable">
-                <thead class="thead-dark">
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>email</th>
-                        <th>Username</th>
-                        <th>Source</th>
-                        <th>uuids.</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <td colspan="6"><input type="submit" value="Merge" class="btn btn-success"></td>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    {% for identity in identities %}
-                    <tr>
-                        <td><input type="checkbox" name="uuid" value="{{identity.uuid}}"></td>
-                        <td>{{identity.name}}</td>
-                        <td>{{identity.email}}</td>
-                        <td>{{identity.username}}</td>
-                        <td>{{identity.source}}</td>
-                        <td><a href="/profiles/{{identity.uuid}}">view</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </form>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Organizations</h2>
+                <table class="table table-striped" id="orgsTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for org in orgs %}
+                        <tr>
+                            <td>{{org.name}}</td>
+                            <td><a href="/profiles/{{profile.profile.uuid}}/enroll_in/{{org.name}}">enroll</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Identities</h2>
+                <form action="./{{profile.profile.uuid}}/merge" method="POST">
+                    <table class="table table-striped" id="identitiesTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>email</th>
+                                <th>Username</th>
+                                <th>Source</th>
+                                <th>uuids.</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6"><input type="submit" value="Merge" class="btn btn-success"></td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for identity in identities %}
+                            <tr>
+                                <td><input type="checkbox" name="uuid" value="{{identity.uuid}}"></td>
+                                <td>{{identity.name}}</td>
+                                <td>{{identity.email}}</td>
+                                <td>{{identity.username}}</td>
+                                <td>{{identity.source}}</td>
+                                <td><a href="/profiles/{{identity.uuid}}">view</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
