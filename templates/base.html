@@ -50,6 +50,14 @@
             
         </nav>
         <div class="container-fluid">
+            {% if err != None %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Ooos!</strong> {{err}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
         {% block body %}{% endblock %}
         </div>
     </body>

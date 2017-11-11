@@ -20,12 +20,9 @@
 # Authors:
 #     J. Manrique Lopez <jsmanrique@bitergia.com>
 
-import logging
 import argparse
 import configparser
 from flask import Flask, request, redirect, url_for, render_template
-
-logging.basicConfig(level=logging.INFO)
 
 from sortinghat.db.database import Database
 import sortinghat.api
@@ -66,7 +63,7 @@ def sortinghat_db_conn(filename):
 
     return sortinghat_db
 
-def render_profiles():
+def render_profiles(err=None):
     """
     Render profiles page
     """
@@ -76,37 +73,33 @@ def render_profiles():
             uuid_dict = u_identity.to_dict()
             enrollments = []
             for enrollment in u_identity.enrollments:
-                print(enrollment.organization.name)
                 enrollments.append(enrollment.organization.name)
             uuid_dict['enrollments'] = enrollments
             unique_identities.append(uuid_dict)
     session.expunge_all()
-    return render_template('profiles.html', uids=unique_identities)
+    return render_template('profiles.html', uids=unique_identities, err=err)
 
-def render_profile(profile_uuid):
+def render_profile(profile_uuid, err=None):
     """
     Render unique identity profile page
     It shows also sections to add enrollments and merge remaining
     identities
     """
     orgs = sortinghat.api.registry(db)
-    
     remaining_identities = []
     profile_enrollments = []
     with db.connect() as session:
         profile_info = session.query(UniqueIdentity).\
             filter(UniqueIdentity.uuid == profile_uuid).first()
         profile_identities = [x.id for x in profile_info.identities]
-        
         for identity in session.query(Identity).filter(Identity.id.notin_(profile_identities)):
             remaining_identities.append(identity)
-        
         for enrollment in profile_info.enrollments:
             profile_enrollments.append(enrollment)
         session.expunge_all()
-    
     return render_template('profile.html', profile=profile_info.to_dict(),\
-         orgs=orgs, identities=remaining_identities, enrollments=profile_info.enrollments)
+         orgs=orgs, identities=remaining_identities, enrollments=profile_info.enrollments,\
+         err=err)
 
 def merge(uuids):
     """
@@ -115,9 +108,11 @@ def merge(uuids):
     if len(uuids) > 1:
         for uuid in uuids[:-1]:
             sortinghat.api.merge_unique_identities(db, uuid, uuids[-1])
-            logging.info("{} merged into {}".format(uuid, uuids[-1]))
+            app.logger.info("%s merged into %s", uuid, uuids[-1])
     else:
-        logging.info("You need at least 2 profiles to merge them")
+        err = "You need at least 2 profiles to merge them"
+        app.logger.info(err)
+    return err
 
 def update_profile(uuid, profile_data):
     """
@@ -126,42 +121,38 @@ def update_profile(uuid, profile_data):
     sortinghat.api.edit_profile(db, uuid, name=profile_data['name'],\
         email=profile_data['email'], is_bot=profile_data['bot'] == 'True',\
         country=profile_data['country'])
-    logging.info("{} update with: name: {}, email: {}, bot: {}, country: {}".\
-        format(uuid, profile_data['name'], profile_data['email'], profile_data['bot'],\
-        profile_data['country']))
+    app.logger.info("%s update with: name: %s, email: %s, bot: %s, country: %s",\
+        uuid, profile_data['name'], profile_data['email'], profile_data['bot'],\
+        profile_data['country'])
 
 app = Flask(__name__)
 
 @app.route('/')
-def index():
+def index(err=None):
     """
     Render index page
     """
-    return render_template('index.html')
+    return render_template('index.html', err=err)
 
 @app.route('/profiles', strict_slashes=False, methods=['GET', 'POST'])
-def profiles():
+def profiles(err=None):
     """
     Render profiles page
     Includes profiles merging functionallity
     """
     if request.method == 'POST':
-        merge(request.form.getlist('uuid'))
-        return render_profiles()
-    else:
-        return render_profiles()
+        err = merge(request.form.getlist('uuid'))
+    return render_profiles(err)
 
 @app.route('/profiles/<profile_uuid>', methods=['GET', 'POST'])
-def profile(profile_uuid):
+def profile(profile_uuid, err=None):
     """
     Render profile page
     Includes profiles indentities unmerging
     """
     if request.method == 'POST':
         update_profile(profile_uuid, request.form)
-        return render_profile(profile_uuid)
-    else:
-        return render_profile(profile_uuid)
+    return render_profile(profile_uuid, err)
 
 @app.route('/profiles/<profile_uuid>/merge', methods=['POST'])
 def merge_to_profile(profile_uuid):
@@ -178,17 +169,22 @@ def enroll_to_profile(profile_uuid, organization):
     """
     Enroll a profile uuid into an organization
     """
-    sortinghat.api.add_enrollment(db, profile_uuid, organization)
-    logging.info("Enrolled {} in {}".format(profile_uuid, organization))
-    return redirect(url_for('profile', profile_uuid=profile_uuid))
+    try:
+        sortinghat.api.add_enrollment(db, profile_uuid, organization)
+        app.logger.info('Enrolled %s in %s', profile_uuid, organization)
+        err = None
+    except sortinghat.exceptions.AlreadyExistsError as error:
+        err = error
+        app.logger.info('Enrollment failed: %s', error)
+    return redirect(url_for('profile', profile_uuid=profile_uuid, err=err))
 
 @app.route('/profiles/<profile_uuid>/unenroll_from/<organization>')
 def unenroll_profile(profile_uuid, organization):
     """
-    Enroll a profile uuid into an organization
+    Un-rnroll a profile uuid from an organization
     """
     sortinghat.api.delete_enrollment(db, profile_uuid, organization)
-    logging.info("Un-enrolled {} in {}".format(profile_uuid, organization))
+    app.logger.info("Un-enrolled %s in %s", profile_uuid, organization)
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/profiles/<profile_uuid>/unmerge/<identity_id>')
@@ -202,7 +198,7 @@ def unmerge(profile_uuid, identity_id):
         uid_profile_name = edit_identity.name
         uid_profile_email = edit_identity.email
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
-        logging.info("Unmerged {} and created its unique indentity".format(identity_id))
+        app.logger.info("Unmerged %s and created its unique indentity", identity_id)
     session.expunge_all()
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
@@ -214,13 +210,19 @@ def organizations():
     orgs = sortinghat.api.registry(db)
     domains = sortinghat.api.domains(db)
     if request.method == 'POST':
-        sortinghat.api.add_organization(db, request.form['name'])
+        try:
+            sortinghat.api.add_organization(db, request.form['name'])
+            app.logger.info('%s added to Organizations', request.form['name'])
+            err = None
+        except sortinghat.exceptions.AlreadyExistsError as error:
+            err = error
+            app.logger.info('Adding organization falied: %s', error)
     
-    return render_template('organizations.html', orgs=orgs, domains=domains)
+    return render_template('organizations.html', orgs=orgs, domains=domains, err=err)
 
 if __name__ == '__main__':
     import sys
     args = parse_args(sys.argv[1:])
-    logging.info("Args: {}".format(args.sh_db_cfg))
+    app.logger.info("Args: {}".format(args.sh_db_cfg))
     db = sortinghat_db_conn(args.sh_db_cfg)
     app.run(debug=True)
