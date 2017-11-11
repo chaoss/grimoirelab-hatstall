@@ -207,13 +207,13 @@ def organizations():
     """
     Render organizations page
     """
+    err = None
     orgs = sortinghat.api.registry(db)
     domains = sortinghat.api.domains(db)
     if request.method == 'POST':
         try:
             sortinghat.api.add_organization(db, request.form['name'])
             app.logger.info('%s added to Organizations', request.form['name'])
-            err = None
         except sortinghat.exceptions.AlreadyExistsError as error:
             err = error
             app.logger.info('Adding organization falied: %s', error)
