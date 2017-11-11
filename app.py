@@ -118,12 +118,21 @@ def update_profile(uuid, profile_data):
     """
     Update profile
     """
-    sortinghat.api.edit_profile(db, uuid, name=profile_data['name'],\
-        email=profile_data['email'], is_bot=profile_data['bot'] == 'True',\
-        country=profile_data['country'])
-    app.logger.info("%s update with: name: %s, email: %s, bot: %s, country: %s",\
-        uuid, profile_data['name'], profile_data['email'], profile_data['bot'],\
-        profile_data['country'])
+    try:
+        sortinghat.api.edit_profile(db, uuid, name=profile_data['name'],\
+            email=profile_data['email'], is_bot=profile_data['bot'] == 'True',\
+            country=profile_data['country'])
+        err = None
+        app.logger.info("%s update with: name: %s, email: %s, bot: %s, country: %s",\
+            uuid, profile_data['name'], profile_data['email'], profile_data['bot'],\
+            profile_data['country'])
+    except sortinghat.exceptions.NotFoundError as error:
+        err = error
+        app.logger.info("Update failed: %s", error)
+    except sortinghat.exceptions.ValueError as error:
+        err = error
+        app.logger.info("Update failed: %s", error)
+    return err
 
 app = Flask(__name__)
 
@@ -151,7 +160,7 @@ def profile(profile_uuid, err=None):
     Includes profiles indentities unmerging
     """
     if request.method == 'POST':
-        update_profile(profile_uuid, request.form)
+        err = update_profile(profile_uuid, request.form)
     return render_profile(profile_uuid, err)
 
 @app.route('/profiles/<profile_uuid>/merge', methods=['POST'])
@@ -181,7 +190,7 @@ def enroll_to_profile(profile_uuid, organization):
 @app.route('/profiles/<profile_uuid>/unenroll_from/<organization>')
 def unenroll_profile(profile_uuid, organization):
     """
-    Un-rnroll a profile uuid from an organization
+    Un-enroll a profile uuid from an organization
     """
     sortinghat.api.delete_enrollment(db, profile_uuid, organization)
     app.logger.info("Un-enrolled %s in %s", profile_uuid, organization)
@@ -217,7 +226,6 @@ def organizations():
         except sortinghat.exceptions.AlreadyExistsError as error:
             err = error
             app.logger.info('Adding organization falied: %s', error)
-    
     return render_template('organizations.html', orgs=orgs, domains=domains, err=err)
 
 if __name__ == '__main__':

@@ -7,8 +7,6 @@
     {{ super() }}
     <script type="text/javascript">
         $(document).ready(function(){
-            //$('#profileIdsTable').DataTable();
-            //$('#profileEnrollments').DataTable();
             $('#orgsTable').DataTable();
             $('#identitiesTable').DataTable();
 
@@ -32,6 +30,10 @@
 
             $('#closeIdentities').click(function(){
                 $('#identities').attr('hidden','');
+            });
+
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy'
             });
         });
     </script>
@@ -82,8 +84,8 @@
                         {% for enrollment in enrollments %}
                         <tr>
                             <td>{{enrollment.organization.name}}</td>
-                            <td>{{enrollment.start}}</td>
-                            <td>{{enrollment.end}}</td>
+                            <td><input type="text" readonly class="datepicker form-control-plaintext" value="{{enrollment.start}}"></td>
+                            <td><input type="text" readonly class="datepicker form-control-plaintext" value="{{enrollment.end}}"></td>
                             <td><a href="/profiles/{{profile.profile.uuid}}/unenroll_from/{{enrollment.organization.name}}">un-enroll</a></td>
                         </tr>
                         {% endfor %}
