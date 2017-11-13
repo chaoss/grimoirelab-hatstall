@@ -2,9 +2,21 @@
 
 ![Intro page](img/intro.jpg)
 
+Hatstall is a web UI to manage part of SortingHat data. It uses basically [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
+
 ## Understanding SortingHat database
 
+SortingHat stores and manages data about *community members*.
+
+Community members are identified by the *identities* they are using in the different data sources (*git*, *github*, *bugzilla*, *slack*, etc.).
+
+By default, each *identity* defines a *unique identity profile*. SortingHat is able to merge different *profiles* under a single one.
+
+SortingHat is also able to manage community member *enrollments* information.
+
 # Managing community profiles
+
+`Profiles` page lists community profiles:
 
 ![Profiles list page](img/profiles.jpg)
 
