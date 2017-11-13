@@ -109,6 +109,7 @@ def merge(uuids):
         for uuid in uuids[:-1]:
             sortinghat.api.merge_unique_identities(db, uuid, uuids[-1])
             app.logger.info("%s merged into %s", uuid, uuids[-1])
+            err = None
     else:
         err = "You need at least 2 profiles to merge them"
         app.logger.info(err)
@@ -170,8 +171,8 @@ def merge_to_profile(profile_uuid):
     """
     uuids = request.form.getlist('uuid')
     uuids.append(profile_uuid)
-    merge(uuids)
-    return redirect(url_for('profile', profile_uuid=profile_uuid))
+    err = merge(uuids)
+    return redirect(url_for('profile', profile_uuid=profile_uuid, err=err))
 
 @app.route('/profiles/<profile_uuid>/enroll_in/<organization>')
 def enroll_to_profile(profile_uuid, organization):
