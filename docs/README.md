@@ -1,8 +1,26 @@
 # Intro
 
+Managing community members profiles data can be very tedious:
+* merging different profiles under a single one
+* enroll a person to the right organization
+
+There are already existing solutions, like `Jonathan Corbet's gitdm`, the current *SortingHat profiles update* solution based on providing a `.yml` file of the updates to be introduced, or even direct access to SortingHat database that are not perfect. For example:
+* `gitdm` is focused in git related information, and *community* members go beyond coding
+* current SortingHat solutions are not very *human friendly*, and the learning curve might be very high
+
+So, I started working on a *PoC (Proof of Concept)* of a web UI to manage these processes by the community manager. This is how **Hatstall** started.
+
 ![Intro page](img/intro.jpg)
 
-Hatstall is a web UI to manage part of [SortingHat](https://github.com/grimoirelab) data. It uses basically [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
+**Hatstall** is a web UI to manage part of [SortingHat](https://github.com/grimoirelab) data. 
+
+The technologies involved are:
+* For the backend:
+  * [Flask](http://flask.pocoo.org/) as main framework
+  * [SortingHat](https://github.com/grimoirelab/sortinghat/) to access to community profiles data (basically using [SortingHat API](https://github.com/grimoirelab/sortinghat/blob/master/sortinghat/api.py))
+* For the front-end:
+  * [Bootstrap](http://getbootstrap.com/) as main UI framework, and some extra plugins like [Bootstrap Datepicker](https://github.com/uxsolutions/bootstrap-datepicker/)
+  * [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
 
 ## Understanding SortingHat database
 
