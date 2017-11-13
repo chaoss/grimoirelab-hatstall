@@ -2,7 +2,7 @@
 
 ![Intro page](img/intro.jpg)
 
-Hatstall is a web UI to manage part of SortingHat data. It uses basically [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
+Hatstall is a web UI to manage part of [SortingHat](https://github.com/grimoirelab) data. It uses basically [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
 
 ## Understanding SortingHat database
 
@@ -54,8 +54,12 @@ Using **Profile Identities** `Add` it's possible to add identities to the profil
 
 # Managing organizations
 
+`Organizations` link shows a list of existing organizations:
+
 ![Organizations list](img/organizations.jpg)
 
 It's possible to add new organizations to the database:
 
 ![Addingg organizations](img/organizations-add.jpg)
+
+*Under development*: User *shall* be able to add and edit  organizations' *domains*.
