@@ -1,4 +1,4 @@
-# Intro
+# Introduction
 
 Managing community members profiles data can be very tedious:
 * merging different profiles under a single one
