@@ -33,15 +33,19 @@ Once you have it, you can launch the web app using the command line:
 $  python3 app.py [-f <your configuration file>]
 ```
 
+There is more documentation is [docs/README.md](under development).
+
 # Contributing
 
 We are sure it is full of issues, so don't hesitate on blaming us and submitting the ones you find!
 
 Feel free to fork it and submit merge requests. We are sure it can be improved in many ways.
 
+Thre is more information in the [CONTRIBUTING](CONTRIBUTING.md) file
+
 # License
 
-GPL v3
+[GPL v3](LICENSE)
 
 ## Logo
 
