@@ -33,7 +33,7 @@
             });
 
             $('.datepicker').datepicker({
-                format: 'mm/dd/yyyy'
+                format: 'mm-dd-yyyy'
             });
         });
     </script>
@@ -78,16 +78,20 @@
                             <th>From</th>
                             <th>To</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for enrollment in enrollments %}
-                        <tr>
-                            <td>{{enrollment.organization.name}}</td>
-                            <td><input type="text" readonly class="datepicker form-control-plaintext" value="{{enrollment.start}}"></td>
-                            <td><input type="text" readonly class="datepicker form-control-plaintext" value="{{enrollment.end}}"></td>
-                            <td><a href="/profiles/{{profile.profile.uuid}}/unenroll_from/{{enrollment.organization.name}}">un-enroll</a></td>
-                        </tr>
+                        <form action="/profiles/{{profile.profile.uuid}}/update_enrollment/{{enrollment.organization.name}}" method="POST">
+                            <tr>
+                                <td>{{enrollment.organization.name}}</td>
+                                <td><input type="text" readonly class="datepicker form-control-plaintext" name="start_date" value="{{enrollment.start}}"></td>
+                                <td><input type="text" readonly class="datepicker form-control-plaintext" name="end_date" value="{{enrollment.end}}"></td>
+                                <td><button type="submit" class="btn btn-sm btn-success">Update</button></td>
+                                <td><a href="/profiles/{{profile.profile.uuid}}/unenroll_from/{{enrollment.organization.name}}">un-enroll</a></td>
+                            </tr>
+                        </form>
                         {% endfor %}
                     </tbody>
                 </table>

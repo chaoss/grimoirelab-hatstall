@@ -24,6 +24,8 @@ import argparse
 import configparser
 from flask import Flask, request, redirect, url_for, render_template
 
+from dateutil import parser
+
 from sortinghat.db.database import Database
 import sortinghat.api
 from sortinghat.db.model import MIN_PERIOD_DATE, MAX_PERIOD_DATE,\
@@ -195,6 +197,16 @@ def unenroll_profile(profile_uuid, organization):
     """
     sortinghat.api.delete_enrollment(db, profile_uuid, organization)
     app.logger.info("Un-enrolled %s in %s", profile_uuid, organization)
+    return redirect(url_for('profile', profile_uuid=profile_uuid))
+
+@app.route('/profiles/<profile_uuid>/update_enrollment/<organization>', methods=['POST'])
+def update_enrollment(profile_uuid, organization):
+    """
+    Update profile enrollment dates
+    """
+    start_date = parser.parse(request.form.get('start_date'))
+    end_date = parser.parse(request.form.get('end_date'))
+    sortinghat.api.add_enrollment(db, profile_uuid, organization, start_date, end_date)
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/profiles/<profile_uuid>/unmerge/<identity_id>')
