@@ -68,7 +68,7 @@ Using **Enrollments** `Add` button, the user is able to *enroll* the profile to 
 
 It's also possible to *un-enroll* a profile from an organization.
 
-*Still under-development*: User *shall* be able to edit enrollment initial and final date.
+User is able to edit enrollment initial and final date.
 
 ![Edit enrollments information](img/profile-enrollments-edit.jpg)
 
@@ -86,4 +86,4 @@ It's possible to add new organizations to the database:
 
 ![Addingg organizations](img/organizations-add.jpg)
 
-*Under development*: User *shall* be able to add and edit  organizations' *domains*.
+*Under development*: User *shall* be able to add and edit organizations' *domains*.
