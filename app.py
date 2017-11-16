@@ -190,13 +190,16 @@ def enroll_to_profile(profile_uuid, organization):
         app.logger.info('Enrollment failed: %s', error)
     return redirect(url_for('profile', profile_uuid=profile_uuid, err=err))
 
-@app.route('/profiles/<profile_uuid>/unenroll_from/<organization>')
-def unenroll_profile(profile_uuid, organization):
+@app.route('/profiles/<profile_uuid>/unenroll_from/<organization_info>')
+def unenroll_profile(profile_uuid, organization_info):
     """
     Un-enroll a profile uuid from an organization
     """
-    sortinghat.api.delete_enrollment(db, profile_uuid, organization)
-    app.logger.info("Un-enrolled %s in %s", profile_uuid, organization)
+    org_name = organization_info.split('_')[0]
+    org_start = parser.parse(organization_info.split('_')[1])
+    org_end = parser.parse(organization_info.split('_')[2])
+    sortinghat.api.delete_enrollment(db, profile_uuid, org_name, org_start, org_end)
+    app.logger.info("Un-enrolled %s from %s", profile_uuid, organization_info)
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/profiles/<profile_uuid>/update_enrollment/<organization>', methods=['POST'])
@@ -212,8 +215,7 @@ def update_enrollment(profile_uuid, organization):
     end_date = parser.parse(request.form.get('end_date'))
     sortinghat.api.delete_enrollment(db, profile_uuid, organization, old_start_date, old_end_date)
     sortinghat.api.add_enrollment(db, profile_uuid, organization, start_date, end_date)
-    app.logger.info("Enrollment dates in %s, change from %s to %s, to %s to %s",\
-        profile_uuid, organization, old_start_date, old_end_date, start_date, end_date)
+    app.logger.info("Enrollment dates for %s in %s, changed", profile_uuid, organization)
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/profiles/<profile_uuid>/unmerge/<identity_id>')
