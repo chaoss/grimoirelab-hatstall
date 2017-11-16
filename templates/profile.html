@@ -32,8 +32,14 @@
                 $('#identities').attr('hidden','');
             });
 
-            $('.datepicker').datepicker({
-                format: 'mm-dd-yyyy'
+            $('.input-daterange input').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+            $('.input-daterange input').each(function() {
+                var datepick = $(this).val();
+                var formated_date = datepick.substr(0,datepick.indexOf(' '));
+                console.log(datepick);
+                $(this).datepicker('setDate', formated_date);
             });
         });
     </script>
@@ -75,8 +81,7 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>Name</th>
-                            <th>From</th>
-                            <th>To</th>
+                            <th>Dates</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -87,11 +92,12 @@
                             <tr>
                                 <td>{{enrollment.organization.name}}</td>
                                 <td>
-                                    <input type="text" readonly class="datepicker form-control-plaintext" name="start_date" value="{{enrollment.start}}">
+                                    <div class="input-group input-daterange">
+                                        <input type="text" class="form-control" name="start_date" value="{{enrollment.start}}">
+                                        <div class="input-group-addon">to</div>
+                                        <input type="text" class="form-control" name="end_date" value="{{enrollment.end}}">
+                                    </div>
                                     <input type="text" readonly hidden name="old_start_date" value="{{enrollment.start}}">
-                                </td>
-                                <td>
-                                    <input type="text" readonly class="datepicker form-control-plaintext" name="end_date" value="{{enrollment.end}}">
                                     <input type="text" readonly hidden name="old_end_date" value="{{enrollment.end}}">
                                 </td>
                                 <td>

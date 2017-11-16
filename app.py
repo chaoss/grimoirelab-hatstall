@@ -203,6 +203,8 @@ def unenroll_profile(profile_uuid, organization):
 def update_enrollment(profile_uuid, organization):
     """
     Update profile enrollment dates
+    It first removes old enrollment
+    and creates a new one (base on the new dates)
     """
     old_start_date = parser.parse(request.form.get('old_start_date'))
     old_end_date = parser.parse(request.form.get('old_end_date'))
@@ -210,6 +212,8 @@ def update_enrollment(profile_uuid, organization):
     end_date = parser.parse(request.form.get('end_date'))
     sortinghat.api.delete_enrollment(db, profile_uuid, organization, old_start_date, old_end_date)
     sortinghat.api.add_enrollment(db, profile_uuid, organization, start_date, end_date)
+    app.logger.info("Enrollment dates in %s, change from %s to %s, to %s to %s",\
+        profile_uuid, organization, old_start_date, old_end_date, start_date, end_date)
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 
 @app.route('/profiles/<profile_uuid>/unmerge/<identity_id>')
