@@ -22,6 +22,11 @@ The technologies involved are:
   * [Bootstrap](http://getbootstrap.com/) as main UI framework, and some extra plugins like [Bootstrap Datepicker](https://github.com/uxsolutions/bootstrap-datepicker/)
   * [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
 
+## Some remarks
+
+* Hatstall doesn't run any data update in the rest of [Grimoirelab](http://grimoirelab.github.io) infrastructure. Its aim is only to manage data in configured SortingHat database.
+* It works well with *small* databases (up to 5K indentities). From there, you might notice lags requesting data, because it doesn't implement any pagination on data requests. In some parts of the process, it requests all the identities in the database.
+
 ## Understanding SortingHat database
 
 SortingHat stores and manages data about *community members*.

@@ -141,13 +141,14 @@ def update_profile(uuid, profile_data):
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/about')
 def index(err=None):
     """
     Render index page
     """
-    return render_template('index.html', err=err)
+    return render_template('about.html', err=err)
 
+@app.route('/')
 @app.route('/profiles', strict_slashes=False, methods=['GET', 'POST'])
 def profiles(err=None):
     """
