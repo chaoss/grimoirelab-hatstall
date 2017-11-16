@@ -32,6 +32,8 @@ from sortinghat.db.model import MIN_PERIOD_DATE, MAX_PERIOD_DATE,\
     UniqueIdentity, Identity, Profile, Organization, Domain,\
     Country, Enrollment, MatchingBlacklist
 
+from _version import __version__
+
 def parse_args(args):
     """
     If provided, it parses address for Sorting Hat database settings
