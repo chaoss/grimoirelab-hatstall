@@ -204,8 +204,11 @@ def update_enrollment(profile_uuid, organization):
     """
     Update profile enrollment dates
     """
+    old_start_date = parser.parse(request.form.get('old_start_date'))
+    old_end_date = parser.parse(request.form.get('old_end_date'))
     start_date = parser.parse(request.form.get('start_date'))
     end_date = parser.parse(request.form.get('end_date'))
+    sortinghat.api.delete_enrollment(db, profile_uuid, organization, old_start_date, old_end_date)
     sortinghat.api.add_enrollment(db, profile_uuid, organization, start_date, end_date)
     return redirect(url_for('profile', profile_uuid=profile_uuid))
 

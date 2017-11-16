@@ -86,10 +86,20 @@
                         <form action="/profiles/{{profile.profile.uuid}}/update_enrollment/{{enrollment.organization.name}}" method="POST">
                             <tr>
                                 <td>{{enrollment.organization.name}}</td>
-                                <td><input type="text" readonly class="datepicker form-control-plaintext" name="start_date" value="{{enrollment.start}}"></td>
-                                <td><input type="text" readonly class="datepicker form-control-plaintext" name="end_date" value="{{enrollment.end}}"></td>
-                                <td><button type="submit" class="btn btn-sm btn-success">Update</button></td>
-                                <td><a href="/profiles/{{profile.profile.uuid}}/unenroll_from/{{enrollment.organization.name}}">un-enroll</a></td>
+                                <td>
+                                    <input type="text" readonly class="datepicker form-control-plaintext" name="start_date" value="{{enrollment.start}}">
+                                    <input type="text" readonly hidden name="old_start_date" value="{{enrollment.start}}">
+                                </td>
+                                <td>
+                                    <input type="text" readonly class="datepicker form-control-plaintext" name="end_date" value="{{enrollment.end}}">
+                                    <input type="text" readonly hidden name="old_end_date" value="{{enrollment.end}}">
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-sm btn-success">Update</button>
+                                </td>
+                                <td>
+                                    <a href="/profiles/{{profile.profile.uuid}}/unenroll_from/{{enrollment.organization.name}}">un-enroll</a>
+                                </td>
                             </tr>
                         </form>
                         {% endfor %}
