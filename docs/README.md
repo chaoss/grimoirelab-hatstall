@@ -10,7 +10,7 @@ There are already existing solutions, like `Jonathan Corbet's gitdm`, the curren
 
 So, I started working on a *PoC (Proof of Concept)* of a web UI to manage these processes by the community manager. This is how **Hatstall** started.
 
-![Intro page](img/intro.jpg)
+![About page](img/intro.jpg)
 
 **Hatstall** is a web UI to manage part of [SortingHat](https://github.com/grimoirelab) data. 
 
@@ -22,10 +22,11 @@ The technologies involved are:
   * [Bootstrap](http://getbootstrap.com/) as main UI framework, and some extra plugins like [Bootstrap Datepicker](https://github.com/uxsolutions/bootstrap-datepicker/)
   * [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
 
-## Some remarks
+## Some disclaimers
 
 * Hatstall doesn't run any data update in the rest of [Grimoirelab](http://grimoirelab.github.io) infrastructure. Its aim is only to manage data in configured SortingHat database.
 * It works well with *small* databases (up to 5K indentities). From there, you might notice lags requesting data, because it doesn't implement any pagination on data requests. In some parts of the process, it requests all the identities in the database.
+* I consider myself a *Python newbie*, so don't expect high quality code here :wink:
 
 ## Understanding SortingHat database
 
