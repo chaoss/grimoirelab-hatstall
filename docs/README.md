@@ -54,7 +54,7 @@ Profiles list page shows every profile existing in the SortingHat database, show
 
 User is able to merge already existing profiles using `Merge` button.
 
-The `edit` link allows Hatstall's user to see and manage unique profile info:
+Using the `name` link allows Hatstall's user to see and manage unique profile info:
 
 ![Profile page](img/profile.jpg)
 
@@ -75,6 +75,8 @@ User is able to edit enrollment initial and final date.
 Using **Profile Identities** `Add` it's possible to add identities to the profile from the list of existing ones:
 
 ![Add identity to community member profile](img/profile-add-identity.jpg)
+
+Just select the ones you want to add, and click on the `Merge` button
 
 # Managing organizations
 
