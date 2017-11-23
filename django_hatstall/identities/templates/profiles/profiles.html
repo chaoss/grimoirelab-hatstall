@@ -1,0 +1,59 @@
+{% extends 'profiles/base.html' %}
+
+{% block title %}Profiles{% endblock %}
+
+{% block head %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#myTable').DataTable();
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+<h1>Profiles</h1>
+<form action="/profiles" method="POST">
+
+    <table class="table table-striped" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>email</th>
+                <th>Enrollments</th>
+                <th>Bot?</th>
+                <th>Country</th>
+                <th>
+                    <abbr title="identities">ids.</abbr>
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="7">
+                    <input type="submit" value="Merge" class="btn btn-success">
+                </td>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for uid in uids %}
+            <tr>
+                <td>
+                    <input type="checkbox" name="uuid" value="{{uid.profile.uuid}}">
+                </td>
+                <td><a href="/profiles/{{uid.profile.uuid}}">{{uid.profile.name}}</a></td>
+                <td>{{uid.profile.email}}</td>
+                <td>
+                    {% for enrollment in uid.enrollments %}
+                        {{enrollment}}
+                    {% endfor %}
+                </td>
+                <td>{{uid.profile.is_bot}}</td>
+                <td>{{uid.profile.country}}</td>
+                <td>{{uid.identities|length}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}

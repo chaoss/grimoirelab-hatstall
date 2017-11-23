@@ -8,6 +8,7 @@ from sortinghat.db.model import UniqueIdentity
 
 
 from django.http import HttpResponse
+from django.template import loader
 
 #
 # VIEWS
@@ -20,9 +21,9 @@ def index(request):
 def list(request):
     sh_db_cfg = "shdb.cfg"
     sh_db = sortinghat_db_conn(sh_db_cfg)
-    uuids = render_profiles(sh_db)
-    print(uuids)
-    return HttpResponse("Listing all profiles: " + json.dumps(uuids))
+    # uuids = render_profiles(sh_db, request)
+    # return HttpResponse("Listing all profiles: " + json.dumps(uuids))
+    return HttpResponse(render_profiles(sh_db, request))
 
 def identity(request, identity_id):
     return HttpResponse("Showing the profile: " + str(identity_id))
@@ -58,7 +59,7 @@ def sortinghat_db_conn(filename):
     return sortinghat_db
 
 
-def render_profiles(db, err=None):
+def render_profiles(db, request, err=None):
     """
     Render profiles page
     """
@@ -72,5 +73,11 @@ def render_profiles(db, err=None):
             uuid_dict['enrollments'] = enrollments
             unique_identities.append(uuid_dict)
     session.expunge_all()
-    return unique_identities
+    template = loader.get_template('profiles/profiles.html')
+    context = {
+        "uids":unique_identities, "err":err
+    }
+    return template.render(context, request)
+    # return unique_identities
+    # return render(request, 'profiles.html', {})
     # return render_template('profiles.html', uids=unique_identities, err=err)

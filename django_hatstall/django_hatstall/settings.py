@@ -54,7 +54,7 @@ ROOT_URLCONF = 'django_hatstall.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['identities/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
