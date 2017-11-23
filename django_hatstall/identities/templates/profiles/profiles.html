@@ -1,8 +1,10 @@
 {% extends 'profiles/base.html' %}
+{% with active_page="profiles" %}
 
 {% block title %}Profiles{% endblock %}
 
 {% block head %}
+    {{ block.super }}
     <script type="text/javascript">
         $(document).ready(function(){
             $('#myTable').DataTable();
@@ -57,3 +59,4 @@
     </table>
 </form>
 {% endblock %}
+{% endwith  %}
