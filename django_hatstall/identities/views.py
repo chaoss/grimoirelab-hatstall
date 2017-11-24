@@ -6,8 +6,9 @@ import sortinghat.api
 from sortinghat.db.database import Database
 from sortinghat.db.model import UniqueIdentity
 
-
+from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.template import loader
 
 #
@@ -19,6 +20,8 @@ def index(request):
     return HttpResponse("Hello, world. You're at the profiles index.")
 
 def list(request):
+    if not request.user.is_authenticated:
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     sh_db_cfg = "shdb.cfg"
     sh_db = sortinghat_db_conn(sh_db_cfg)
     # uuids = render_profiles(sh_db, request)
