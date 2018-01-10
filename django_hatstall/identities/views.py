@@ -1,5 +1,4 @@
 import configparser
-import json
 from dateutil import parser
 
 import sortinghat.api
@@ -23,6 +22,7 @@ def index(request):
         err = merge(request.POST.getlist('uuid'))
     return redirect('/profiles/list')
 
+
 def list(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
@@ -31,6 +31,7 @@ def list(request):
     # uuids = render_profiles(sh_db, request)
     # return HttpResponse("Listing all profiles: " + json.dumps(uuids))
     return HttpResponse(render_profiles(sh_db, request))
+
 
 def identity(request, identity_id):
     err = None
@@ -41,6 +42,7 @@ def identity(request, identity_id):
     if request.method == 'POST':
         err = update_profile(sh_db, identity_id, request.POST)
     return HttpResponse(render_profile(sh_db, identity_id, request, err))
+
 
 def update_enrollment(request, identity_id, organization):
     """
@@ -63,6 +65,7 @@ def update_enrollment(request, identity_id, organization):
     sortinghat.api.add_enrollment(db, identity_id, organization, start_date, end_date)
     return redirect('/profiles/' + identity_id)
 
+
 def unenroll_profile(request, identity_id, organization_info):
     """
     Un-enroll a profile uuid from an organization
@@ -79,6 +82,7 @@ def unenroll_profile(request, identity_id, organization_info):
     org_end = parser.parse(organization_info.split('_')[2])
     sortinghat.api.delete_enrollment(db, identity_id, org_name, org_start, org_end)
     return redirect('/profiles/' + identity_id)
+
 
 def enroll_to_profile(request, identity_id, organization):
     """
@@ -98,6 +102,7 @@ def enroll_to_profile(request, identity_id, organization):
         err = error
     return redirect('/profiles/' + identity_id)
 
+
 def merge_to_profile(request, identity_id):
     """
     Merge a list of unique profiles to the profile
@@ -111,6 +116,7 @@ def merge_to_profile(request, identity_id):
     uuids.append(identity_id)
     err = merge(uuids)
     return redirect('/profiles/' + identity_id)
+
 
 def unmerge(request, profile_uuid, identity_id):
     """
@@ -132,6 +138,7 @@ def unmerge(request, profile_uuid, identity_id):
     session.expunge_all()
     return redirect('/profiles/' + profile_uuid)
 
+
 def organizations(request):
     """
     Render organizations page
@@ -149,17 +156,18 @@ def organizations(request):
     orgs = sortinghat.api.registry(db)
     domains = sortinghat.api.domains(db)
     context = {
-        "orgs": orgs, "domains": domains, "err":err
+        "orgs": orgs, "domains": domains, "err": err
     }
     template = loader.get_template('organizations/organizations.html')
     return HttpResponse(template.render(context, request))
+
 
 def about_render(request, err=None):
     """
     Render index page
     """
     context = {
-        "err":err
+        "err": err
     }
     template = loader.get_template('about/about.html')
     return HttpResponse(template.render(context, request))
@@ -167,6 +175,7 @@ def about_render(request, err=None):
 #
 # HELPER METHODS FOR VIEWS
 #
+
 
 def merge(uuids):
     """
@@ -181,6 +190,7 @@ def merge(uuids):
     else:
         err = "You need at least 2 profiles to merge them"
     return err
+
 
 def parse_shdb_config_file(filename):
     """
@@ -223,12 +233,13 @@ def render_profiles(db, request, err=None):
     session.expunge_all()
     template = loader.get_template('profiles/profiles.html')
     context = {
-        "uids":unique_identities, "err":err
+        "uids": unique_identities, "err": err
     }
     return template.render(context, request)
     # return unique_identities
     # return render(request, 'profiles.html', {})
     # return render_template('profiles.html', uids=unique_identities, err=err)
+
 
 def render_profile(db, profile_uuid, request, err=None):
     """
@@ -249,19 +260,21 @@ def render_profile(db, profile_uuid, request, err=None):
             profile_enrollments.append(enrollment)
         session.expunge_all()
     context = {
-        "profile": profile_info.to_dict(), "orgs": orgs, "identities": remaining_identities, "enrollments": profile_info.enrollments, "err":err
+        "profile": profile_info.to_dict(), "orgs": orgs, "identities": remaining_identities,
+        "enrollments": profile_info.enrollments, "err": err
     }
     template = loader.get_template('profiles/profile.html')
     return template.render(context, request)
+
 
 def update_profile(db, uuid, profile_data):
     """
     Update profile
     """
     try:
-        sortinghat.api.edit_profile(db, uuid, name=profile_data['name'],\
-            email=profile_data['email'], is_bot=profile_data['bot'] == 'True',\
-            country=profile_data['country'])
+        sortinghat.api.edit_profile(db, uuid, name=profile_data['name'],
+                                    email=profile_data['email'], is_bot=profile_data['bot'] == 'True',
+                                    country=profile_data['country'])
         err = None
     except sortinghat.exceptions.NotFoundError as error:
         err = error
