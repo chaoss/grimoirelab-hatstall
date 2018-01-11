@@ -1,0 +1,15 @@
+mariadb:
+    image: mariadb:10.0
+    environment:
+        - MYSQL_ROOT_PASSWORD=
+        - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+
+hatstall:
+  image: acs/hatstall
+  links: 
+        - mariadb
+  ports:
+        - 8000:8000
+  # volumes:
+    # The stage for this mordred load raw items, waits for ES ...
+    # - ./stage:/home/meditor/stage

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+echo "Running Hatstall"
+
+git clone https://github.com/acs/django-hatstall.git
+cd django-hatstall/django_hatstall
+
+# Create the data models
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# Create the initial admin user: admin/admin
+PYTHONPATH=. django_hatstall/create_admin_superuser.py
+
+echo "Waiting 10s so MariaDB service is ready"
+sleep 10
+
+# Configure SH database from MariaDB container
+sed -e "s|localhost|mariadb|" -i shdb.cfg
+# Load initial SH data
+mysqladmin -u root -h mariadb create shdb
+mysql -u root -h mariadb shdb < identities/data/shdb.sql
+
+echo "Initial SortingHat data loaded"
+
+# Run the Hatstall service
+echo "Hatstall service ready at http://localhost:8000"
+python3 manage.py runserver 0.0.0.0:8000
