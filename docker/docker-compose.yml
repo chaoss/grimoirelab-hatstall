@@ -5,7 +5,7 @@ mariadb:
         - MYSQL_ALLOW_EMPTY_PASSWORD=yes
 
 hatstall:
-  image: acs/hatstall
+  image: acsdocker/hatstall
   links: 
         - mariadb
   ports:
