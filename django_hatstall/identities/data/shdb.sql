@@ -114,6 +114,7 @@ CREATE TABLE `identities` (
   `username` varchar(128) DEFAULT NULL,
   `source` varchar(32) NOT NULL,
   `uuid` varchar(128) DEFAULT NULL,
+  `last_modified` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `_identity_unique` (`name`,`email`,`username`,`source`),
   KEY `uuid` (`uuid`),
@@ -127,7 +128,7 @@ CREATE TABLE `identities` (
 
 LOCK TABLES `identities` WRITE;
 /*!40000 ALTER TABLE `identities` DISABLE KEYS */;
-INSERT INTO `identities` VALUES ('11cc0348b60711cdee515286e394c961388230ab','quan','zhquan7@gmail.com',NULL,'git','11cc0348b60711cdee515286e394c961388230ab'),('35c0421704928bcbe3a0d9a4de1d79f9590ccaa9','Alberto Martín','alberto.martin@bitergia.com',NULL,'git','35c0421704928bcbe3a0d9a4de1d79f9590ccaa9'),('3af32d529fce2e7dc632bb26fea5ed4abcb3fcd6','valerio cosentino','valcos@bitergia.com',NULL,'git','3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'),('3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7','valerio','valerio.cosentino@gmail.com',NULL,'git','3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'),('75fc28ef4643de5323e89fb26e4e67c97b24f507','Santiago Dueñas','sduenas@bitergia.com',NULL,'git','75fc28ef4643de5323e89fb26e4e67c97b24f507'),('9aed245d9df109f8d00ca0e656121c3bdde46a2a','Alvaro del Castillo','acs@bitergia.com',NULL,'git','9aed245d9df109f8d00ca0e656121c3bdde46a2a'),('9b233a0d9bac16fcd3845fbc814ef46678280e18','Stephan Barth','stephan.barth@gmail.com',NULL,'git','9b233a0d9bac16fcd3845fbc814ef46678280e18'),('b6e141bc0879dfe90fa4892aaa8bea54041d6a46','David Pose Fernández','dpose@bitergia.com',NULL,'git','b6e141bc0879dfe90fa4892aaa8bea54041d6a46'),('b840795e4f57cc12bed1cf923e15de4c23fb7461','Jesus M. Gonzalez-Barahona','jgb@gsyc.es',NULL,'git','b840795e4f57cc12bed1cf923e15de4c23fb7461'),('c780b9e5b86174118a9dbc1b738e9cd0e5fa3566','GitHub','noreply@github.com',NULL,'git','c780b9e5b86174118a9dbc1b738e9cd0e5fa3566'),('cc1000a28d57ed5351bb8a62dfff5e37569b2df8','J. Manrique Lopez de la Fuente','jsmanrique@bitergia.com',NULL,'git','cc1000a28d57ed5351bb8a62dfff5e37569b2df8'),('dae602936b2ccd72b8a62b7a428a2b94e7042d84','Luis Cañas Díaz','lcanas@bitergia.com',NULL,'git','dae602936b2ccd72b8a62b7a428a2b94e7042d84'),('e0e6032e78e3b81857838f35a5aeefdbcabbb114','camillem','camillem@users.noreply.github.com',NULL,'git','e0e6032e78e3b81857838f35a5aeefdbcabbb114'),('fc6b62a865dd0b6f9ea06913c1e2506b2a2057ee','David Esler','drumandstrum@gmail.com',NULL,'git','fc6b62a865dd0b6f9ea06913c1e2506b2a2057ee');
+INSERT INTO `identities` VALUES ('11cc0348b60711cdee515286e394c961388230ab','quan','zhquan7@gmail.com',NULL,'git','11cc0348b60711cdee515286e394c961388230ab',NULL),('35c0421704928bcbe3a0d9a4de1d79f9590ccaa9','Alberto Martín','alberto.martin@bitergia.com',NULL,'git','35c0421704928bcbe3a0d9a4de1d79f9590ccaa9',NULL),('3af32d529fce2e7dc632bb26fea5ed4abcb3fcd6','valerio cosentino','valcos@bitergia.com',NULL,'git','3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7',NULL),('3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7','valerio','valerio.cosentino@gmail.com',NULL,'git','3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7',NULL),('75fc28ef4643de5323e89fb26e4e67c97b24f507','Santiago Dueñas','sduenas@bitergia.com',NULL,'git','75fc28ef4643de5323e89fb26e4e67c97b24f507',NULL),('9aed245d9df109f8d00ca0e656121c3bdde46a2a','Alvaro del Castillo','acs@bitergia.com',NULL,'git','9aed245d9df109f8d00ca0e656121c3bdde46a2a',NULL),('9b233a0d9bac16fcd3845fbc814ef46678280e18','Stephan Barth','stephan.barth@gmail.com',NULL,'git','9b233a0d9bac16fcd3845fbc814ef46678280e18',NULL),('b6e141bc0879dfe90fa4892aaa8bea54041d6a46','David Pose Fernández','dpose@bitergia.com',NULL,'git','b6e141bc0879dfe90fa4892aaa8bea54041d6a46',NULL),('b840795e4f57cc12bed1cf923e15de4c23fb7461','Jesus M. Gonzalez-Barahona','jgb@gsyc.es',NULL,'git','b840795e4f57cc12bed1cf923e15de4c23fb7461',NULL),('c780b9e5b86174118a9dbc1b738e9cd0e5fa3566','GitHub','noreply@github.com',NULL,'git','c780b9e5b86174118a9dbc1b738e9cd0e5fa3566',NULL),('cc1000a28d57ed5351bb8a62dfff5e37569b2df8','J. Manrique Lopez de la Fuente','jsmanrique@bitergia.com',NULL,'git','cc1000a28d57ed5351bb8a62dfff5e37569b2df8',NULL),('dae602936b2ccd72b8a62b7a428a2b94e7042d84','Luis Cañas Díaz','lcanas@bitergia.com',NULL,'git','dae602936b2ccd72b8a62b7a428a2b94e7042d84',NULL),('e0e6032e78e3b81857838f35a5aeefdbcabbb114','camillem','camillem@users.noreply.github.com',NULL,'git','e0e6032e78e3b81857838f35a5aeefdbcabbb114',NULL),('fc6b62a865dd0b6f9ea06913c1e2506b2a2057ee','David Esler','drumandstrum@gmail.com',NULL,'git','fc6b62a865dd0b6f9ea06913c1e2506b2a2057ee',NULL);
 /*!40000 ALTER TABLE `identities` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,6 +218,7 @@ DROP TABLE IF EXISTS `uidentities`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `uidentities` (
   `uuid` varchar(128) NOT NULL,
+  `last_modified` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -227,7 +229,7 @@ CREATE TABLE `uidentities` (
 
 LOCK TABLES `uidentities` WRITE;
 /*!40000 ALTER TABLE `uidentities` DISABLE KEYS */;
-INSERT INTO `uidentities` VALUES ('11cc0348b60711cdee515286e394c961388230ab'),('35c0421704928bcbe3a0d9a4de1d79f9590ccaa9'),('3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7'),('75fc28ef4643de5323e89fb26e4e67c97b24f507'),('9aed245d9df109f8d00ca0e656121c3bdde46a2a'),('9b233a0d9bac16fcd3845fbc814ef46678280e18'),('b6e141bc0879dfe90fa4892aaa8bea54041d6a46'),('b840795e4f57cc12bed1cf923e15de4c23fb7461'),('c780b9e5b86174118a9dbc1b738e9cd0e5fa3566'),('cc1000a28d57ed5351bb8a62dfff5e37569b2df8'),('dae602936b2ccd72b8a62b7a428a2b94e7042d84'),('e0e6032e78e3b81857838f35a5aeefdbcabbb114'),('fc6b62a865dd0b6f9ea06913c1e2506b2a2057ee');
+INSERT INTO `uidentities` VALUES ('11cc0348b60711cdee515286e394c961388230ab',NULL),('35c0421704928bcbe3a0d9a4de1d79f9590ccaa9',NULL),('3e07ffee1f3dc6eac7be34d46b0423ab81e2eac7',NULL),('75fc28ef4643de5323e89fb26e4e67c97b24f507',NULL),('9aed245d9df109f8d00ca0e656121c3bdde46a2a',NULL),('9b233a0d9bac16fcd3845fbc814ef46678280e18',NULL),('b6e141bc0879dfe90fa4892aaa8bea54041d6a46',NULL),('b840795e4f57cc12bed1cf923e15de4c23fb7461',NULL),('c780b9e5b86174118a9dbc1b738e9cd0e5fa3566',NULL),('cc1000a28d57ed5351bb8a62dfff5e37569b2df8',NULL),('dae602936b2ccd72b8a62b7a428a2b94e7042d84',NULL),('e0e6032e78e3b81857838f35a5aeefdbcabbb114',NULL),('fc6b62a865dd0b6f9ea06913c1e2506b2a2057ee',NULL);
 /*!40000 ALTER TABLE `uidentities` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -240,4 +242,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-11  9:57:15
+-- Dump completed on 2018-01-11 10:05:54
