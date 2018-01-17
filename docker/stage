@@ -17,12 +17,13 @@ sleep 10
 
 # Configure SH database from MariaDB container
 sed -e "s|localhost|mariadb|" -i shdb.cfg
+
 # Load initial SH data
 mysqladmin -u root -h mariadb create shdb
 mysql -u root -h mariadb shdb < identities/data/shdb.sql
-
 echo "Initial SortingHat data loaded"
 
 # Run the Hatstall service
 echo "Hatstall service ready at http://localhost:8000"
-python3 manage.py runserver 0.0.0.0:8000
+# python3 manage.py runserver 0.0.0.0:8000
+gunicorn django_hatstall.wsgi --bind 0.0.0.0:8000
