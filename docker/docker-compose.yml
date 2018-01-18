@@ -23,7 +23,7 @@ redis:
   command: redis-server --save "" --appendonly no
 
 mordred:
-  image: bitergia/mordred-28:latest
+  image: bitergia/mordred:elasticgirl.28
   links:
     - elasticsearch
     - kibiter
