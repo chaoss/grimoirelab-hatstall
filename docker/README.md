@@ -1,5 +1,15 @@
 # Hatshall Docker Environment
 
+## Quick execution
+
+In order to start using Hatshall docker containers you just need to have Docker
+installed in your host and execute:
+
+```
+django-hatstall/docker $ docker-compose up -d kibiter
+django-hatstall/docker $ docker-compose up -d hatstall
+django-hatstall/docker $ docker-compose up -d mordred
+```
 
 ## Intro
 
