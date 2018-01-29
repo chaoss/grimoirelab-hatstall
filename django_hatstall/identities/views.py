@@ -261,6 +261,7 @@ def render_profiles(db, request, err=None):
     with db.connect() as session:
         for u_identity in session.query(UniqueIdentity):
             uuid_dict = u_identity.to_dict()
+            uuid_dict.update({"last_modified": u_identity.last_modified})
             enrollments = []
             for enrollment in u_identity.enrollments:
                 enrollments.append(enrollment.organization.name)
