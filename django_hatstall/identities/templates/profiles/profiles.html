@@ -25,6 +25,7 @@
                 <th>Enrollments</th>
                 <th>Bot?</th>
                 <th>Country</th>
+                <th>Last Modified</th>
                 <th>
                     <abbr title="identities">ids.</abbr>
                 </th>
@@ -52,6 +53,7 @@
                 </td>
                 <td>{{uid.profile.is_bot}}</td>
                 <td>{{uid.profile.country.name}}</td>
+                <td>{{uid.last_modified}}</td>
                 <td>{{uid.identities|length}}</td>
             </tr>
             {% endfor %}
