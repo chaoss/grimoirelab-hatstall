@@ -40,9 +40,7 @@ mariadb:
         - MYSQL_ALLOW_EMPTY_PASSWORD=yes
 
 hatstall:
-  image: acsdocker/hatstall
-  links: 
-        - mariadb
+  image: grimoirelab/hatstall
   ports:
         - 8000:8000
   # volumes:
