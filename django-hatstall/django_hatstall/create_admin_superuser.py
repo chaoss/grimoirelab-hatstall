@@ -50,4 +50,8 @@ try:
     db_manager.create_superuser(username=admin_user, email='', password=admin_pass)
     print("User for django admin created: admin/admin as login")
 except django.db.utils.IntegrityError:
-    print("User for django admin already exists")
+    print("User for django admin already exists, let's update the password")
+    super_user = db_manager.get(username=admin_user)
+    super_user.set_password(admin_pass)
+    super_user.save()
+    print("Password for django admin user updated")
