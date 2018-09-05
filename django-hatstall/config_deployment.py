@@ -36,7 +36,7 @@ settings_file = 'django_hatstall/settings.py'
 settings = None
 
 try:
-    csrf_trusted_origins = os.environ['CSRF_TRUSTED_ORIGINS'].split(" ")
+    csrf_trusted_origins = os.environ['CSRF_TRUSTED_ORIGINS'].strip('"').split(' ')
 except KeyError:
     csrf_trusted_origins = []
 
