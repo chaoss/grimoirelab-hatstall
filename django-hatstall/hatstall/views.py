@@ -326,7 +326,6 @@ def render_profiles(db, request, err=None):
     global table_length
     global current_page
     unique_identities = []
-    sh_db = sortinghat_db_conn()
     err = None
     if request.method == 'POST':
         if "shsearch" in request.POST:
@@ -337,11 +336,14 @@ def render_profiles(db, request, err=None):
         elif "table_length" in request.POST:
             table_length = int(request.POST.get('table_length'))
             current_page = 1
-    else:
+    elif request.method == 'GET':
         shsearch = ""
         current_page = 1
         table_length = 10
+        template = loader.get_template('search_identities.html')
+        return template.render({}, request)
 
+    sh_db = sortinghat_db_conn()
     offset = 0 + (table_length * (current_page - 1))
     try:
         # Code from api of sortinghat
