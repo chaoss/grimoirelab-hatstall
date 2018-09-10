@@ -1,4 +1,5 @@
 import configparser
+import datetime
 import math
 import os
 
@@ -143,7 +144,7 @@ def update_enrollment(request, identity_id, organization):
 
 
 @login_required
-def unenroll_profile(request, identity_id, organization_info):
+def unenroll_profile(request, identity_id, organization_info, enrollment_start_date, enrollment_end_date):
     """
     Un-enroll a profile uuid from an organization
     """
@@ -153,10 +154,9 @@ def unenroll_profile(request, identity_id, organization_info):
     if request.method == 'POST':
         return redirect('/hatstall/' + identity_id)
     db = sortinghat_db_conn()
-    org_name = organization_info.split('_')[0]
-    org_start = parser.parse(organization_info.split('_')[1])
-    org_end = parser.parse(organization_info.split('_')[2])
-    sortinghat.api.delete_enrollment(db, identity_id, org_name, org_start, org_end)
+    sortinghat.api.delete_enrollment(db, identity_id, organization_info,
+                                     datetime.datetime.strptime(enrollment_start_date, '%Y-%m-%d %H:%M:%S'),
+                                     datetime.datetime.strptime(enrollment_end_date, '%Y-%m-%d %H:%M:%S'))
     return redirect('/hatstall/' + identity_id)
 
 

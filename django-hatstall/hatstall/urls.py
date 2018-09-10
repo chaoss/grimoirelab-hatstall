@@ -16,7 +16,8 @@ urlpatterns = [
             views.update_enrollment, name='update identity'),
     re_path(r'^(?P<identity_id>[0-f]+)/enroll_in/(?P<organization>[0-9A-Za-z\w|\W]+)$',
             views.enroll_to_profile, name='enroll identity'),
-    re_path(r'^(?P<identity_id>[0-f]+)/unenroll_from/(?P<organization_info>[0-9A-Za-z\w|\W]+)$',
+    re_path(r'^(?P<identity_id>[0-f]+)/unenroll_from/(?P<organization_info>[0-9A-Za-z\w|\W]+)/ \
+            (?P<enrollment_start_date>[0-9A-Za-z\w|\W]+)/(?P<enrollment_end_date>[0-9A-Za-z\w|\W]+)$',
             views.unenroll_profile, name='unenroll identity'),
     re_path(r'^(?P<identity_id>[0-f]+)/merge$', views.merge_to_profile, name='merge to profile'),
     re_path(r'^(?P<profile_uuid>[0-f]+)/unmerge/(?P<identity_id>[0-f]+)$', views.unmerge, name='unmerge identity from a profile'),
