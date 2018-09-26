@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% with active_page="profiles" %}
 
+{% load blank_name %}
+
 {% block title %}Profiles{% endblock %}
 
 {% block head %}
@@ -90,7 +92,7 @@
                 <td>
                     <input type="checkbox" name="uuid" value="{{uid.profile.uuid}}">
                 </td>
-                <td><a href="{{uid.profile.uuid}}">{{uid.profile.name}}</a></td>
+                <td><a href="{{uid.profile.uuid}}">{{uid.profile.name|blank_name}}</a></td>
                 <td>{{uid.profile.email}}</td>
                 <td>
                     {% for enrollment in uid.enrollments %}
