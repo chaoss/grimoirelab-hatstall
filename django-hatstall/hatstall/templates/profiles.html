@@ -88,6 +88,7 @@
         </tfoot>
         <tbody>
             {% for uid in uids %}
+            {% if uid.profile %}
             <tr>
                 <td>
                     <input type="checkbox" name="uuid" value="{{uid.profile.uuid}}">
@@ -104,6 +105,7 @@
                 <td>{{uid.last_modified}}</td>
                 <td>{{uid.identities|length}}</td>
             </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
     </table>
