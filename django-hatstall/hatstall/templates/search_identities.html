@@ -7,7 +7,7 @@
 <div class="container" style="margin-top: 10%;">
   <h1 style="text-align: center; font-weight: bold">Search identities <i class="fa fa-search icon"></i></h1>
   <br>
-  <form action="list" method="POST">{% csrf_token %}
+  <form action="{% url 'identities list' %}" method="POST">{% csrf_token %}
     <div class="input-group">
         <input class="form-control" id="shsearch" name="shsearch" minlength=3 placeholder="Search identities...">
         <span class="input-group-btn">

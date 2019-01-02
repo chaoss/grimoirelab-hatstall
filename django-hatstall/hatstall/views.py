@@ -388,6 +388,12 @@ def render_profile(db, profile_uuid, request, err=None):
     with db.connect() as session:
         profile_info = session.query(UniqueIdentity). \
             filter(UniqueIdentity.uuid == profile_uuid).first()
+        if not profile_info:
+            context = {
+                "err": "uuid {} does not belong to a profile".format(profile_uuid)
+            }
+            template = loader.get_template('search_identities.html')
+            return template.render(context, request)
         for enrollment in profile_info.enrollments:
             profile_enrollments.append(enrollment)
         countries = sortinghat.api.countries(db)
