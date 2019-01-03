@@ -13,6 +13,15 @@ sudo a2dissite 000-default && \
      sudo a2ensite apache-hatstall && \
      sudo a2enmod ssl
 
+# Link Apache logs to stdout and stderr in order to see them in Docker logs
+if [ "$APACHE_LOG_DIR" != "" ]; then
+    sudo ln -sf /dev/stderr $APACHE_LOG_DIR/hatstall-error.log
+    sudo ln -sf /dev/stdout $APACHE_LOG_DIR/hatstall-access.log
+else
+    sudo ln -sf /dev/stderr /var/log/apache2/error.log
+    sudo ln -sf /dev/stdout /var/log/apache2/access.log
+fi
+
 cd grimoirelab-hatstall/django-hatstall
 
 # We make sure the directory where the sqlite3 file is stored has the proper
