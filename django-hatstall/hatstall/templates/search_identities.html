@@ -9,7 +9,7 @@
   <br>
   <form action="{% url 'identities list' %}" method="POST">{% csrf_token %}
     <div class="input-group">
-        <input class="form-control" id="shsearch" name="shsearch" minlength=3 placeholder="Search identities...">
+        <input class="form-control" id="shsearch" name="shsearch" minlength=2 placeholder="Search identities...">
         <span class="input-group-btn">
             <button class="btn btn-info" type="submit">Go!</button>
         </span>
