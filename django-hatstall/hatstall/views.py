@@ -189,8 +189,8 @@ def merge_profiles(request):
     """
 
     if request.method == 'POST':
-        err = merge(request.POST.getlist('uuid'))
-    return redirect('identities list')
+        last_uuid, err = merge(request.POST.getlist('uuid'))
+    return redirect('/identities/hatstall/' + last_uuid)
 
 
 @login_required
@@ -205,7 +205,7 @@ def merge_to_profile(request, identity_id):
         return redirect('/identities/hatstall/' + identity_id)
     uuids = request.POST.getlist('uuid')
     uuids.append(identity_id)
-    err = merge(uuids)
+    last_uuid, err = merge(uuids)
     return redirect('/identities/hatstall/' + identity_id)
 
 
@@ -303,9 +303,11 @@ def merge(uuids):
         for uuid in uuids[:-1]:
             sortinghat.api.merge_unique_identities(db, uuid, uuids[-1])
             err = None
+        last_uuid = uuids[-1]
     else:
         err = "You need at least 2 profiles to merge them"
-    return err
+        last_uuid = None
+    return last_uuid, err
 
 
 def sortinghat_db_conn():
