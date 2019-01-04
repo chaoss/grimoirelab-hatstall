@@ -132,7 +132,7 @@ def update_enrollment(request, identity_id, organization):
     if not Conf.check_conf():
         return redirect('shdb')
     if request.method != 'POST':
-        return redirect('profiles/list')
+        return redirect('identities list')
     db = sortinghat_db_conn()
     old_start_date = parser.parse(request.POST.get('old_start_date'))
     old_end_date = parser.parse(request.POST.get('old_end_date'))
@@ -140,7 +140,7 @@ def update_enrollment(request, identity_id, organization):
     end_date = parser.parse(request.POST.get('end_date'))
     sortinghat.api.delete_enrollment(db, identity_id, organization, old_start_date, old_end_date)
     sortinghat.api.add_enrollment(db, identity_id, organization, start_date, end_date)
-    return redirect('/identities/hatstall/' + identity_id)
+    return redirect('show identity', identity_id=identity_id)
 
 
 @login_required
@@ -152,12 +152,12 @@ def unenroll_profile(request, identity_id, organization_info, enrollment_start_d
     if not Conf.check_conf():
         return redirect('shdb')
     if request.method == 'POST':
-        return redirect('/identities/hatstall/' + identity_id)
+        return redirect('show identity', identity_id=identity_id)
     db = sortinghat_db_conn()
     sortinghat.api.delete_enrollment(db, identity_id, organization_info,
                                      datetime.datetime.strptime(enrollment_start_date, '%Y-%m-%d %H:%M:%S'),
                                      datetime.datetime.strptime(enrollment_end_date, '%Y-%m-%d %H:%M:%S'))
-    return redirect('/identities/hatstall/' + identity_id)
+    return redirect('show identity', identity_id=identity_id)
 
 
 @login_required
@@ -169,14 +169,14 @@ def enroll_to_profile(request, identity_id, organization):
     if not Conf.check_conf():
         return redirect('shdb')
     if request.method == 'POST':
-        return redirect('/identities/hatstall/' + identity_id)
+        return redirect('show identity', identity_id=identity_id)
     db = sortinghat_db_conn()
     try:
         sortinghat.api.add_enrollment(db, identity_id, organization)
         err = None
     except sortinghat.exceptions.AlreadyExistsError as error:
         err = error
-    return redirect('/identities/hatstall/' + identity_id)
+    return redirect('show identity', identity_id=identity_id)
 
 
 @login_required
@@ -190,7 +190,7 @@ def merge_profiles(request):
 
     if request.method == 'POST':
         last_uuid, err = merge(request.POST.getlist('uuid'))
-    return redirect('/identities/hatstall/' + last_uuid)
+    return redirect('show identity', identity_id=last_uuid)
 
 
 @login_required
@@ -202,11 +202,11 @@ def merge_to_profile(request, identity_id):
     if not Conf.check_conf():
         return redirect('shdb')
     if request.method != 'POST':
-        return redirect('/identities/hatstall/' + identity_id)
+        return redirect('show identity', identity_id=identity_id)
     uuids = request.POST.getlist('uuid')
     uuids.append(identity_id)
     last_uuid, err = merge(uuids)
-    return redirect('/identities/hatstall/' + identity_id)
+    return redirect('show identity', identity_id=identity_id)
 
 
 @login_required
@@ -218,7 +218,7 @@ def unmerge(request, profile_uuid, identity_id):
     if not Conf.check_conf():
         return redirect('shdb')
     if request.method != 'GET':
-        return redirect('/identities/hatstall/' + profile_uuid)
+        return redirect('show identity', identity_id=profile_uuid)
     db = sortinghat_db_conn()
     sortinghat.api.move_identity(db, identity_id, identity_id)
     with db.connect() as session:
@@ -227,7 +227,7 @@ def unmerge(request, profile_uuid, identity_id):
         uid_profile_email = edit_identity.email
         sortinghat.api.edit_profile(db, identity_id, name=uid_profile_name, email=uid_profile_email)
     session.expunge_all()
-    return redirect('/identities/hatstall/' + profile_uuid)
+    return redirect('show identity', identity_id=profile_uuid)
 
 
 @login_required
