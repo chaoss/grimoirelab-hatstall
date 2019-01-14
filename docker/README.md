@@ -20,9 +20,20 @@ The different files we will have to modify are:
 - setup.cfg: Mordred's configuration file
 - projects.json: JSON file with projects and its repositories
 - orgs_file.json: a Sorting Hat file format with companies/organizations and domains
-- docker-compose.yml: easy, the file where the container is specified
+- docker-compose.yml: easy, the file where the container is specified with some variables that can be added
 
 Let's start hacking!.
+
+
+## docker-compose variables
+
+These are the variables that you can define in the docker-compose file:
+
+- `DATABASE_DIR`: path where the database is defined. If this variable is not defined, you will have to configure django-hatstall in order to connect to the db.
+- `ADMIN_USER`: username of the admin user that will be on the django-hatstall app. If this variable is not defined, you will have to configure django creating a superuser.
+- `ADMIN_PASS`: password of the admin user that will be on the django-hatstall app. If this variable is not defined, you will have to configure django creating a superuser.
+- `APACHE_LOG_DIR`: path where the `access` and `error` logs of Apache2 are going to be stored. If this variable is not defined, you will have the `access` and `error` log in the default path of Apache2.
+
 
 ## setup.cfg
 
