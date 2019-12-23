@@ -233,7 +233,75 @@ def unmerge(request, profile_uuid, identity_id):
 @login_required
 def organizations(request):
     """
-    Render organizations page
+    Render main organizations page
+    """
+    err = None
+    if not Conf.check_conf():
+        return redirect('shdb')
+    db = sortinghat_db_conn()
+    orgs = sortinghat.api.registry(db)
+    context = {
+        "orgs": orgs, "err": err
+    }
+    template = loader.get_template('organizations.html')
+    return HttpResponse(template.render(context, request))
+
+
+@login_required
+def add_organization(request):
+    """
+    Add new organization and render updated main organizations page
+    """
+    err = None
+    if not Conf.check_conf():
+        return redirect('shdb')
+    db = sortinghat_db_conn()
+    if request.method == 'POST':
+        org_name = request.POST.get('name')
+        try:
+            sortinghat.api.add_organization(db, org_name)
+        except sortinghat.exceptions.AlreadyExistsError as error:
+            err = error
+    # Get data to render view
+    orgs = sortinghat.api.registry(db)
+    context = {
+        "orgs": orgs, "err": err
+    }
+    template = loader.get_template('organizations.html')
+    return HttpResponse(template.render(context, request))
+
+
+@login_required
+def edit_organization(request, organization):
+    """
+    Render main organizations page and the form to edit the selected organization
+    """
+    err = None
+    org_edit_form = None
+    if not Conf.check_conf():
+        return redirect('shdb')
+    db = sortinghat_db_conn()
+    if request.method == 'POST':
+        try:
+            match_orgs = sortinghat.api.registry(db, organization)
+            org_edit_form = match_orgs[0] if match_orgs else None  # Get first result
+        except sortinghat.exceptions.NotFoundError as error:
+            err = error
+    # Get data to render view
+    doms_edit_form = [dom.domain for dom in org_edit_form.domains]
+    orgs = sortinghat.api.registry(db)
+    context = {
+        "orgs": orgs, "org_edit_form": org_edit_form,
+        "doms_edit_form": doms_edit_form, "err": err
+    }
+    template = loader.get_template('organizations.html')
+    return HttpResponse(template.render(context, request))
+
+
+@login_required
+def delete_organization(request, organization):
+    """
+    Delete the selected organization and render main organizations page
     """
     err = None
     if not Conf.check_conf():
@@ -241,12 +309,70 @@ def organizations(request):
     db = sortinghat_db_conn()
     if request.method == 'POST':
         try:
-            sortinghat.api.add_organization(db, request.POST.get('name'))
-        except sortinghat.exceptions.AlreadyExistsError as error:
+            sortinghat.api.delete_organization(db, organization)
+        except sortinghat.exceptions.NotFoundError as error:
             err = error
+    # Get data to render view
     orgs = sortinghat.api.registry(db)
     context = {
         "orgs": orgs, "err": err
+    }
+    template = loader.get_template('organizations.html')
+    return HttpResponse(template.render(context, request))
+
+
+@login_required
+def add_domain(request, organization):
+    """
+    Add a domain to the selected organization and render main organizations page with the edit form
+    """
+    err = None
+    org_edit_form = None
+    if not Conf.check_conf():
+        return redirect('shdb')
+    db = sortinghat_db_conn()
+    if request.method == 'POST':
+        domain = request.POST.get('domain')
+        try:
+            sortinghat.api.add_domain(db, organization, domain)
+        except sortinghat.exceptions.AlreadyExistsError as error:
+            err = error
+    # Get data to render view
+    match_orgs = sortinghat.api.registry(db, organization)
+    org_edit_form = match_orgs[0] if match_orgs else None  # Get first result
+    doms_edit_form = [dom.domain for dom in org_edit_form.domains]
+    orgs = sortinghat.api.registry(db)
+    context = {
+        "orgs": orgs, "org_edit_form": org_edit_form,
+        "doms_edit_form": doms_edit_form, "err": err
+    }
+    template = loader.get_template('organizations.html')
+    return HttpResponse(template.render(context, request))
+
+
+@login_required
+def delete_domain(request, organization, domain):
+    """
+    Delete the selected domain and render main organizations page with the edit form
+    """
+    err = None
+    org_edit_form = None
+    if not Conf.check_conf():
+        return redirect('shdb')
+    db = sortinghat_db_conn()
+    if request.method == 'POST':
+        try:
+            sortinghat.api.delete_domain(db, organization, domain)
+        except sortinghat.exceptions.NotFoundError as error:
+            err = error
+    # Get data to render view
+    match_orgs = sortinghat.api.registry(db, organization)
+    org_edit_form = match_orgs[0] if match_orgs else None  # Get first result
+    doms_edit_form = [dom.domain for dom in org_edit_form.domains]
+    orgs = sortinghat.api.registry(db)
+    context = {
+        "orgs": orgs, "org_edit_form": org_edit_form,
+        "doms_edit_form": doms_edit_form, "err": err
     }
     template = loader.get_template('organizations.html')
     return HttpResponse(template.render(context, request))
