@@ -7,14 +7,52 @@
     {{ block.super }}
     <script type="text/javascript">
         $(document).ready(function(){
-            $('#orgsTable').DataTable();
+            $('#orgsTable').DataTable({
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false,
+                } ]
+            });
+
             $('#domsTable').DataTable();
 
+            // Control visibility for "Add organization" form
             $('#addOrgBtn').click(function(){
-                $('#addOrg').removeAttr('hidden');
+                $('#addOrgDiv').removeAttr('hidden');
+                $('#addOrgDiv').css('visibility', 'visible');
+                $('#addOrgDiv').css('display', 'block');
+
+                // Hiding "Edit organization" div when activating this one
+                $('#editOrgDiv').attr('hidden','');
+                $('#editOrgDiv').css('display', 'none');
+
             });
             $('#closeAddOrg').click(function(){
-                $('#addOrg').attr('hidden','');
+                $('#addOrgDiv').attr('hidden','');
+                $('#addOrgDiv').css('display', 'none');
+            });
+
+            // Control visibility for "Edit organization" form
+            {% if org_edit_form %}
+                $('#editOrgDiv').removeAttr('hidden');
+                $('#editOrgDiv').css('visibility', 'visible');
+                $('#editOrgDiv').css('display', 'block');
+            {% endif %}
+
+            $('#closeEditDoms').click(function(){
+                $('#editOrgDiv').attr('hidden','');
+                $('#editOrgDiv').css('display', 'none');
+            });
+
+            // Show confirmation modal when submitting "Delete organization" form
+            $('#deleteOrgBtn').click(function(e){
+                e.preventDefault();
+                $('#delOrgModal').modal('show');
+            });
+            // Submitting form once the "Confirm" button in the modal is clicked
+            $('#confirmDeleteOrgBtn').click(function(e){
+                e.preventDefault();
+                $('#deleteOrg').submit();
             });
         });
     </script>
@@ -29,33 +67,121 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
+                    <th>Domains</th>
+                    <th class="no-sort"></th>
                 </tr>
             </thead>
             <tbody>
                 {%  for org in orgs %}
                 <tr>
                     <td>{{org.name}}</td>
+                    <td>
+                        {% for domain in org.domains %}
+                            {{domain.domain}}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <form action="{% url 'edit_organization' org.name %}" method="POST">{% csrf_token %}
+                            <input type="submit" class="btn btn-link btn-sm" value="Edit"/>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
-    <div class="col-sm-6">
-        <form hidden id="addOrg" action="" method="POST">{% csrf_token %}
+    <div hidden id="addOrgDiv" class="col-sm-3">
+        <form id="addOrg" action="{% url 'add_organization' %}" method="POST">{% csrf_token %}
             <button id="closeAddOrg" type="button" class="close" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <h2>Add organization</h2>
 
-            <div class="form-group row">
-                <label for="organizationName" class="col-sm-2 col-form-label">Name:</label>
-                <input name="name" type="text" class="col-sm-10 form-control" id="organizationName" placeholder="Organization name">
+            <div class="form-group">
+                <div class="row">
+                    <label for="organizationName" class="col-sm-2 col-form-label">Name:</label>
+                    <input name="name" type="text" class="col-sm-10 form-control" id="organizationName" placeholder="Organization name" required>
+                </div>
             </div>
             <button type="submit" class="btn btn-success">Add</button>
         </form>
     </div>
-
+    <div hidden id="editOrgDiv" class="col-sm-3">
+        {% if org_edit_form %}
+        <div class="row">
+            <div class="col-sm-10">
+                <h2>Edit organization</h2>
+            </div>
+            <div class="col-sm-2">
+                <button id="closeEditDoms" type="button" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        </div>
+        <div>
+            <form id="deleteOrg" action="{% url 'delete_organization' org_edit_form.name %}" method="POST">{% csrf_token %}
+                <div class="row form-group">
+                    <div class="col-sm-8">
+                        <label class="h3" for="deleteOrgName">{{ org_edit_form.name }}</label>
+                        <input id="deleteOrgName" class="form-control" type="text" value="{{ org_edit_form.name }}" hidden disabled>
+                    </div>
+                    <div class="col-sm-4">
+                        <label hidden for="deleteOrgBtn"></label>
+                        <button id="deleteOrgBtn" type="button" class="btn btn-danger" value="Remove">Remove</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <form id="deleteDom" method="POST">{% csrf_token %}
+                <div class="form-group row">
+                    <input class="form-control" id="editOrgName" type="text" value="{{ org_edit_form.name }}" hidden disabled>
+                </div>
+                <div id="inputDomainsWrapper" class="form-group">
+                    {% for dom in doms_edit_form %}
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <input id="dom_{{ forloop.counter }}" type="text" class="form-control" placeholder="Organization domain"
+                                   aria-label="Remove organization domain" aria-describedby="basic-addon2" value="{{ dom }}" disabled>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-outline-danger" type="submit" formaction="{% url 'delete_domain' org_edit_form.name dom %}">Remove</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </form>
+            <form id="addDomain" action="{% url 'add_domain' org_edit_form.name %}" method="POST">{% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-8">
+                        <input id="newDomain" type="text" class="form-control" placeholder="Organization domain" aria-label="Add organization domain"\
+                               name="domain"  aria-describedby="basic-addon2" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-success">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="delOrgModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Hatstall says: </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Modal confirmation close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to remove <b>{{ org_edit_form.name }}</b> and all its domains?</p>
+                    </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="confirmDeleteOrgBtn" aria-label="Modal confirmation button" type="submit" class="btn btn-primary">Confirm</button>
+                     </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
-{% endwith  %}
+{% endwith %}
