@@ -10,6 +10,10 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#myTable').DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false
+                }],
                 "lengthChange": false,
                 "paging": false
             });
@@ -35,6 +39,10 @@
             // Selection of the table length
             $('#tableLength option[value="{{table_length}}"]').attr("selected",true);
 
+            // Control checking and unchecking all checkboxes
+            $("#selectAll").change(function() {
+                $('.checkboxRow:checkbox').prop('checked', this.checked);
+            });
         });
     </script>
 {% endblock %}
@@ -64,7 +72,7 @@
     <table class="table table-striped" id="myTable">
         <thead class="thead-dark">
             <tr>
-                <th></th>
+                <th class="no-sort"><input id="selectAll" type="checkbox"></th>
                 <th>Name</th>
                 <th>email</th>
                 <th>Enrollments</th>
@@ -91,7 +99,7 @@
             {% if uid.profile %}
             <tr>
                 <td>
-                    <input type="checkbox" name="uuid" value="{{uid.profile.uuid}}">
+                    <input class="checkboxRow" type="checkbox" name="uuid" value="{{uid.profile.uuid}}">
                 </td>
                 <td><a href="{{uid.profile.uuid}}">{{uid.profile.name|blank_name}}</a></td>
                 <td>{{uid.profile.email}}</td>
