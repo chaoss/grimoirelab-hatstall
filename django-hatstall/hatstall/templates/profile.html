@@ -90,6 +90,11 @@
                 $('#identities').removeAttr('hidden');
                 $('#uniqueIdentitiesTable').removeAttr('hidden');
             }
+
+            // Control checking and unchecking all checkboxes
+            $("#selectAll").change(function() {
+                $('.checkboxRow:checkbox').prop('checked', this.checked);
+            });
         });
 
         // Functions based on JS events
@@ -241,7 +246,7 @@
                         <table class="table table-striped" id="identitiesSearchTable">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th></th>
+                                    <th><input id="selectAll" type="checkbox"></th>
                                     <th>Name</th>
                                     <th>email</th>
                                     <th>More</th>
@@ -259,7 +264,7 @@
                                 {% for identity in unique_identities %}
                                 <tr>
                                     {% if identity.profile.uuid != profile.profile.uuid %}
-                                        <td><input type="checkbox" name="uuid" value="{{identity.profile.uuid}}"></td>
+                                        <td><input class="checkboxRow" type="checkbox" name="uuid" value="{{identity.profile.uuid}}"></td>
                                         <td>{{identity.profile.name}}</td>
                                         <td>{{identity.profile.email}}</td>
                                         <td><a href="javascript:showUniqueIdentity('{{identity.uuid}}');">view</a></td>
