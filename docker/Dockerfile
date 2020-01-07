@@ -53,4 +53,7 @@ RUN chmod 755 ${DEPLOY_USER_DIR}/stage
 USER ${DEPLOY_USER}
 WORKDIR ${DEPLOY_USER_DIR}
 
+# Install hatstall
+RUN git clone https://github.com/chaoss/grimoirelab-hatstall.git
+
 CMD ${DEPLOY_USER_DIR}/stage

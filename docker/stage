@@ -2,7 +2,7 @@
 
 echo "Running Hatstall"
 
-git clone https://github.com/chaoss/grimoirelab-hatstall.git
+
 
 # Try to copy a config file for SortingHat
 cp shdb.cfg grimoirelab-hatstall/django-hatstall
