@@ -19,25 +19,32 @@ According to [Harry Potter Wiki](http://harrypotter.wikia.com/wiki/Hatstall) **H
 
 > A Hatstall was an archaic term for a student of Hogwarts School of Witchcraft and Wizardry whose sorting took more than five minutes because the Sorting Hat found them to have a personality equally suited to different Hogwarts Houses. The Sorting Hat sometimes took the student's personal preference into consideration in order to break such a tie.
 
-## Installation
-
-Clone the repository and install, or check you already have, the requirements defined in the [requirements.txt](requirements.txt) file. They are mostly:
+## Requirements
 
 * Django
 * grimoire-elk
 * grimoirelab-toolkit
 * sortinghat
 
+## Installation
+
+```buildoutcfg
+$ git clone https://github.com/chaoss/grimoirelab-hatstall
+$ cd grimoirelab-hatstall
+$ pip3 -r requirements.txt
+$ pip3 install .
+```
+
 ## Usage
 
-Once you have the requirements installed (I recommend using a Python virtual environment) you can launch the web app using the command line:
+Once you have the requirements installed, you can launch the web app using the command line:
 
 ```
-django-hatstall/django_hatstall $ python3 manage.py migrate
-django-hatstall/django_hatstall $ python3 manage.py runserver
+$ django-hatstall/django_hatstall $ python3 manage.py migrate
+$ django-hatstall/django_hatstall $ python3 manage.py runserver
 ```
 
-There is more documentation [under development](docs/README.md).
+Documentation about the operations performed with HatStall is available in the [docs](docs/README.md) folder.
 
 # Contributing
 
@@ -53,4 +60,4 @@ Thre is more information in the [CONTRIBUTING](CONTRIBUTING.md) file
 
 ## Logo
 
-Logo is based in a combination of [Bitergia](http://bitergia.com)'s owl logo and [Wizard's white hat](https://openclipart.org/detail/245968/wizards-white-hat) from [Thewizardplusplus](https://openclipart.org/user-detail/thewizardplusplus), but we are working on a new one
+Logo is based in a combination of [Bitergia](http://bitergia.com)'s owl logo and [Wizard's white hat](https://openclipart.org/detail/245968/wizards-white-hat) from [Thewizardplusplus](https://openclipart.org/user-detail/thewizardplusplus)
