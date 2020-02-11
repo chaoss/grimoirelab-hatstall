@@ -1,32 +1,13 @@
 # Introduction
 
-Managing community members profiles data can be very tedious:
-* merging different profiles under a single one
-* enroll a person to the right organization
-
-There are already existing solutions, like `Jonathan Corbet's gitdm`, the current *SortingHat profiles update* solution based on providing a `.yml` file of the updates to be introduced, or even direct access to SortingHat database that are not perfect. For example:
-* `gitdm` is focused in git related information, and *community* members go beyond coding
-* current SortingHat solutions are not very *human friendly*, and the learning curve might be very high
-
-So, @jsmanrique started working on a *PoC (Proof of Concept)* of a web UI to manage these processes by the community manager. This is how **Hatstall** started.
-
-![About page](img/intro.jpg)
-
-**Hatstall** is a web UI to manage part of [SortingHat](https://github.com/grimoirelab) data. 
-
-The technologies involved are:
+Managing community members profiles data can be very tedious with [SortingHat](https://github.com/chaoss/grimoirelab-sortinghat) for non technical users. HatStall is a Web application that provides an intuitive graphical interface to perform 
+operations over a SortingHat database. The technologies used in HatStall are:
 * For the backend:
-  * We moved from [Flask](http://flask.pocoo.org/) to [Django](https://www.djangoproject.com/) as main framework
-  * [SortingHat](https://github.com/grimoirelab/sortinghat/) to access to community profiles data (basically using [SortingHat API](https://github.com/grimoirelab/sortinghat/blob/master/sortinghat/api.py))
+  * [Django](https://www.djangoproject.com/)
+  * [SortingHat API](https://github.com/chaoss/grimoirelab-sortinghat)
 * For the front-end:
   * [Bootstrap](http://getbootstrap.com/) as main UI framework, and some extra plugins like [Bootstrap Datepicker](https://github.com/uxsolutions/bootstrap-datepicker/)
   * [DataTables JQuery plug-in](https://datatables.net/) to *search* and *order* data.
-
-## Some disclaimers
-
-* Hatstall doesn't run any data update in the rest of [Grimoirelab](http://grimoirelab.github.io) infrastructure. Its aim is only to manage data in configured SortingHat database.
-* It works well with *small* databases (up to 5K indentities). From there, you might notice lags requesting data, because it doesn't implement any pagination on data requests. In some parts of the process, it requests all the identities in the database.
-* This project is on its early days, so don't expect high quality code here, yet :wink:
 
 ## Understanding SortingHat database
 
@@ -37,6 +18,12 @@ Community members are identified by the *identities* they are using in the diffe
 By default, each *identity* defines a *unique identity profile*. SortingHat is able to merge different *profiles* under a single one.
 
 SortingHat is also able to manage community member *enrollments* information.
+
+Details about SortingHat and its underlying approach in the following [reseach paper](https://www.researchgate.net/publication/331088184_SortingHat_Wizardry_on_Software_Project_Members):
+``` 
+Moreno, David, et al. SortingHat: wizardry on software project members. 
+In 2019 IEEE/ACM 41st ICSE-Companion, pp. 51-54.
+```
 
 # Managing community profiles
 
@@ -80,12 +67,10 @@ Just select the ones you want to add, and click on the `Merge` button
 
 # Managing organizations
 
-`Organizations` link shows a list of existing organizations:
+`Organizations` link shows a list of existing organizations. On the top right corner, the `Add` button allows to add an organization, while `Search` box allows to search for a given organization.
 
-![Organizations list](img/organizations.jpg)
+![Organizations list](img/organizations.png)
 
-It's possible to add new organizations to the database:
+For each organization listed, the button `Edit` (on the right side) allows to add/remove the organization domains or delete the organization completely.
 
-![Addingg organizations](img/organizations-add.jpg)
-
-*Under development*: User *shall* be able to add and edit organizations' *domains*.
+![Addingg organizations](img/organizations-add.png)
