@@ -5,7 +5,7 @@ Hatstall
 Hatstall is a Django app to manage the identities in Sorting Hat. You can
 edit, list, merge, unmerge and enroll the identities in SortingHat.
 
-Detailed documentation is in the "docs" directory.
+Detailed documentation is at https://github.com/chaoss/grimoirelab-hatstall
 
 Quick start
 -----------
