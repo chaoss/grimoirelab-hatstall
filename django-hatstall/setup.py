@@ -3,7 +3,7 @@ import os
 from setuptools import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
-readme_md = os.path.join(here, 'README.md')
+readme_md = os.path.join(here, 'README.rst')
 
 with codecs.open(readme_md, encoding='utf-8') as f:
     long_description = f.read()
@@ -19,7 +19,7 @@ setup(
     license='GPLv3',
     description='A Django app to manage identities in Sorting Hat.',
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type='text/x-rst',
     url='https://github.com/chaoss/grimoirelab-hatstall',
     author='Bitergia',
     author_email='acs@bitergia.com',
