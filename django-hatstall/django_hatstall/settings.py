@@ -63,8 +63,7 @@ ROOT_URLCONF = 'django_hatstall.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'django_hatstall/templates'),
-                 os.path.join(BASE_DIR, 'hatstall/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'hatstall/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
