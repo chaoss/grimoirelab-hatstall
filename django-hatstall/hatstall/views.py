@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 
 import sortinghat.api
 
+from sortinghat.cmd.enroll import Enroll
+
 from sortinghat.db.database import Database
 from sortinghat.db.model import UniqueIdentity
 from sortinghat.db.model import Identity
@@ -41,6 +43,7 @@ class Conf():
     shdb_pass = None
     shdb_name = None
     shdb_host = None
+    shdb_port = "3306"  # Default port
     sh_db_cfg = "shdb.cfg"  # Default config file
 
     @staticmethod
@@ -124,22 +127,32 @@ def identity(request, identity_id):
 @login_required
 def update_enrollment(request, identity_id, organization):
     """
-    Update profile enrollment dates
-    It first removes old enrollment
-    and creates a new one (base on the new dates)
+    Update the enrollment from a profile updating dates
+    using `Enroll` command, merging overlapping dates.
     """
-    err = None
     if not Conf.check_conf():
         return redirect('shdb')
     if request.method != 'POST':
         return redirect('identities list')
-    db = sortinghat_db_conn()
-    old_start_date = parser.parse(request.POST.get('old_start_date'))
-    old_end_date = parser.parse(request.POST.get('old_end_date'))
+
+    db_args = {
+        "user": Conf.shdb_user,
+        "password": Conf.shdb_pass,
+        "database": Conf.shdb_name,
+        "host": Conf.shdb_host,
+        "port": Conf.shdb_port
+    }
+
     start_date = parser.parse(request.POST.get('start_date'))
     end_date = parser.parse(request.POST.get('end_date'))
-    sortinghat.api.delete_enrollment(db, identity_id, organization, old_start_date, old_end_date)
-    sortinghat.api.add_enrollment(db, identity_id, organization, start_date, end_date)
+
+    enroll_cmd = Enroll(**db_args)
+    enroll_cmd.enroll(identity_id,
+                      organization,
+                      from_date=start_date,
+                      to_date=end_date,
+                      merge=True)
+
     return redirect('show identity', identity_id=identity_id)
 
 
