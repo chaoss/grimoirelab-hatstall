@@ -540,6 +540,9 @@ def render_profile(db, profile_uuid, request, err=None):
             return template.render(context, request)
         for enrollment in profile_info.enrollments:
             profile_enrollments.append(enrollment)
+        profile_enrollments.sort(key=lambda x: x.start,
+                                 reverse=True)
+
         countries = sortinghat.api.countries(db)
         session.expunge_all()
 
@@ -584,7 +587,7 @@ def render_profile(db, profile_uuid, request, err=None):
     context = {
         "profile": profile_info.to_dict(), "orgs": orgs, "unique_identities": unique_identities, "n_pages": n_pages,
         "current_page": current_page_profile, "shsearch": shsearch_profile, "table_length": table_length_profile,
-        "show_table": show_table, "enrollments": profile_info.enrollments, "countries": countries, "err": err
+        "show_table": show_table, "enrollments": profile_enrollments, "countries": countries, "err": err
     }
     template = loader.get_template('profile.html')
     return template.render(context, request)
