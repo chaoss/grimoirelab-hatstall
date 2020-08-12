@@ -175,7 +175,9 @@
                                     <button type="submit" class="btn btn-sm btn-success">Update</button>
                                 </td>
                                 <td>
-                                    <a href="{% url 'unenroll identity' profile.profile.uuid enrollment.organization.name enrollment.start|date:'Y-m-d H:i:s' enrollment.end|date:'Y-m-d H:i:s' %}">un-enroll</a>
+                                    <a class="btn btn-sm btn-danger" href="{% url 'unenroll identity' profile.profile.uuid enrollment.organization.name enrollment.start|date:'Y-m-d H:i:s' enrollment.end|date:'Y-m-d H:i:s' %}">
+                                       Un-enroll
+                                    </a>
                                 </td>
                             </tr>
                         </form>
@@ -294,7 +296,11 @@
                         {% for org in orgs %}
                         <tr>
                             <td>{{org.name}}</td>
-                            <td><a href="{% url 'enroll identity' profile.profile.uuid org.name %}">enroll</a></td>
+                            <td>
+                                <a class="btn btn-sm btn-success" href="{% url 'enroll identity' profile.profile.uuid org.name %}">
+                                    Enroll
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
