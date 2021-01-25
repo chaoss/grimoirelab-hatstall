@@ -1,4 +1,4 @@
-# Hatstall
+# Hatstall [![Build Status](https://github.com/chaoss/grimoirelab-hatstall/workflows/build/badge.svg)](https://github.com/chaoss/grimoirelab-hatstall/actions?query=workflow:build+branch:master+event:push)
 
 Hatstall is a web interface for [SortingHat](http://github.com/grimoirelab/sortinghat) databases developed mainly with [Django](https://www.djangoproject.com/)
 
