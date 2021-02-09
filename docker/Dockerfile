@@ -17,7 +17,7 @@ RUN apt-get update && \
         bash locales \
         gcc \
         git git-core \
-        mysql-client \
+        mariadb-client \
         python3 \
         python3-pip \
         python3-venv \
