@@ -1,8 +1,8 @@
-# Copyright (C) 2018 Bitergia
+# Copyright (C) 2018-2021 Bitergia
 # GPLv3 License
 
-FROM debian:stretch-slim
-MAINTAINER Alvaro del Castillo <acs@bitergia.com>
+FROM debian:buster-slim
+MAINTAINER Santiago Dueñas <sduenas@bitergia.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEPLOY_USER grimoirelab
