@@ -40,20 +40,14 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV LANG C.UTF-8
 
-# Install pip packages needed
-RUN pip3 install django
-RUN pip3 install python-dateutil
-RUN pip3 install pandas==0.18.1
-RUN pip3 install setuptools
-RUN pip3 install sortinghat
-
 ADD stage ${DEPLOY_USER_DIR}/stage
 RUN chmod 755 ${DEPLOY_USER_DIR}/stage
 
 USER ${DEPLOY_USER}
 WORKDIR ${DEPLOY_USER_DIR}
 
-# Install hatstall
+# Install hatstall and dependencies
 RUN git clone https://github.com/chaoss/grimoirelab-hatstall.git
+RUN pip3 install -r grimoirelab-hatstall/requirements.txt
 
 CMD ${DEPLOY_USER_DIR}/stage

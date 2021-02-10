@@ -22,8 +22,6 @@ According to [Harry Potter Wiki](http://harrypotter.wikia.com/wiki/Hatstall) **H
 ## Requirements
 
 * Django
-* grimoire-elk
-* grimoirelab-toolkit
 * sortinghat
 
 ## Installation
