@@ -48,6 +48,6 @@ WORKDIR ${DEPLOY_USER_DIR}
 
 # Install hatstall and dependencies
 RUN git clone https://github.com/chaoss/grimoirelab-hatstall.git
-RUN pip3 install -r grimoirelab-hatstall/requirements.txt
+RUN sudo pip3 install -r grimoirelab-hatstall/requirements.txt
 
 CMD ${DEPLOY_USER_DIR}/stage
